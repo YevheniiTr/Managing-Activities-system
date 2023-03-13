@@ -5,85 +5,37 @@ CREATE TABLE Users
     password varchar(128) NOT NULL
 );
 
-CREATE table Roles
+CREATE TABLE Roles
 (
     id   BIGSERIAL PRIMARY KEY,
     name varchar(32) NOT NULL
 );
 
-create table user_role
+CREATE TABLE user_role
 (
-    user_id bigserial references Users (id),
-    role_id bigserial references Roles (id)
+    user_id BIGSERIAL REFERENCES Users (id) NOT NULL,
+    role_id BIGSERIAL REFERENCES Roles (id) NOT NULL
 );
 
-CREATE TABLE Course
+CREATE TABLE Profile
 (
-    id      BIGSERIAL PRIMARY KEY,
-    num     int NOT NULL,
-    user_id BIGINT REFERENCES Users (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id       BIGSERIAL PRIMARY KEY,
+    user_id  BIGSERIAL REFERENCES Users (id) NOT NULL,
+    name     VARCHAR(128)                    NOT NULL,
+    age      INT                             NOT NULL,
+    gender   INT                             NOT NULL,
+    git_link VARCHAR(128),
+    info     TEXT
 );
 
-
-CREATE TABLE Semester
+CREATE TABLE Lang
 (
-    id        BIGSERIAL PRIMARY KEY,
-    num       int NOT NULL,
-    course_id BIGINT REFERENCES Course (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id   BIGSERIAL PRIMARY KEY,
+    name VARCHAR(128) NOT NULL
 );
 
-
-CREATE TABLE Discipline
+CREATE TABLE Profile_Lang
 (
-    id          BIGSERIAL PRIMARY KEY,
-    name        varchar(128) NOT NULL,
-    semester_id BIGINT REFERENCES Semester (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE Folder
-(
-    id            BIGSERIAL PRIMARY KEY,
-    name          varchar(128) NOT NULL,
-    discipline_id BIGINT REFERENCES Discipline (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE File
-(
-    id          BIGSERIAL PRIMARY KEY,
-    name        varchar(128) NOT NULL,
-    path        varchar(128) NOT NULL,
-    mime_type   varchar(64)  NOT NULL,
-    upload_time timestamp    NOT NULL,
-    folder_id   BIGINT REFERENCES Folder (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
-
-CREATE TABLE UserSetting
-(
-    id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT REFERENCES Users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    lesson_duration int NOT NULL,
-    break_time      int NOT NULL
-);
-
-
-
-CREATE TABLE Schedule
-(
-    id          BIGSERIAL PRIMARY KEY,
-    semester_id BIGINT REFERENCES semester (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
-
-CREATE TABLE ScheduleItem
-(
-    id            BIGSERIAL PRIMARY KEY,
-    schedule_id   BIGINT REFERENCES Schedule (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    lesson_num    int         NOT NULL,
-    discipline_id BIGINT REFERENCES Discipline (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    week_type     varchar(32) NOT NULL,
-    lesson_type   varchar(32) NOT NULL,
-    weekday       varchar(32) NOT NULL
+    profile_id BIGSERIAL REFERENCES Profile (id) NOT NULL,
+    lang_id    BIGSERIAL REFERENCES Lang (id)    NOT NULL
 );

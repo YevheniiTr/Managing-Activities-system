@@ -20,19 +20,15 @@ public class User extends BaseEntity {
 
     String password;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    Profile profile;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     List<Role> roles;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    List<Course> courses;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    UserSetting userSetting;
-
 
     public User(Long id) {
         super(id);
