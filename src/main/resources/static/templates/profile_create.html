@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link th:href="@{../css/profile_create.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<h1>Создание профиля</h1>
+
+<form  th:action="@{/profile/create}" method="post">
+    <label for="name">Имя:</label>
+    <input type="text" name="name" id="name" required><br><br>
+    <label for="age">Возраст:</label>
+    <input type="number" name="age" id="age" required><br><br>
+    <label for="gender">Пол:</label>
+    <select name="gender" id="gender" required>
+        <option value="NONE">-- Выбрать --</option>
+        <option value="MALE">Мужчина</option>
+        <option value="FEMALE">Женщина</option>
+    </select><br><br>
+    <label for="git">Ссылка на GitHub:</label>
+    <input type="text" name="git" id="git" required><br><br>
+    <label for="info">Информация о Вас:</label><br>
+    <textarea name="info" id="info" rows="10" cols="30"></textarea><br><br>
+    <label>Список технологий:</label><br>
+    <div th:each="technology : ${technologies}">
+    <input type="checkbox"
+           name="technologies"
+           th:text="${technology.getName()}"
+           th:value="${technology.getId()}"><br>
+    </div><br>
+    <input type="submit" value="Создать профиль">
+</form>
+
+</body>
+</html>

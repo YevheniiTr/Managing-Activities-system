@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link th:href="@{../css/profile_create.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<h1>Обновление профиля</h1>
+
+<form th:action="@{/profile/update}" method="post">
+    <label for="name">Имя:</label>
+    <input type="text" name="name" id="name" th:value="${profile.getName()}" required><br><br>
+    <label for="age">Возраст:</label>
+    <input type="number" name="age" id="age" th:value="${profile.getAge()}" required><br><br>
+    <label for="gender">Пол:</label>
+    <select name="gender" id="gender" required>
+        <option th:value="${profile.getGender().name()}" th:text="${profile.getGender().name()}" selected></option>
+        <option th:each="gender : ${genders}" th:value="${gender.name()}" th:text="${gender.name()}"></option>
+    </select><br><br>
+    <label for="git">Ссылка на GitHub:</label>
+    <input type="text" name="git" id="git" th:value="${profile.getGit()}" required><br><br>
+    <label for="info">Информация о Вас:</label><br>
+    <textarea name="info" id="info" rows="10" cols="30" th:text="${profile.getInfo()}"></textarea><br><br>
+    <label>Список технологий:</label><br>
+    <div th:each="technology : ${profile.getTechnologies()}">
+        <input type="checkbox"
+               name="technologies"
+               th:text="${technology.getName()}"
+               th:value="${technology.getId()}"
+               checked>
+        <br>
+    </div>
+    <div th:each="technology : ${technologies}">
+        <input type="checkbox"
+               name="technologies"
+               th:text="${technology.getName()}"
+               th:value="${technology.getId()}">
+        <br>
+    </div>
+    <br>
+    <input type="submit" value="Обновить профиль">
+</form>
+
+</body>
+</html>

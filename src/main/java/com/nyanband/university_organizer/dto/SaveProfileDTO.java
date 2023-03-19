@@ -12,5 +12,6 @@ public class SaveProfileDTO {
     Gender gender;
     String git;
     String info;
-    List<String> technologies;
+    Long userId;
+    List<Long> technologies;
 }

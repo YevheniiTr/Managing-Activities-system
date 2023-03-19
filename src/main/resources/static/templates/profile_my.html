@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link th:href="@{../css/profile_create.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<h1>Мой профиль</h1>
+
+<form th:action="@{/profile/update}" method="get">
+    <p><b>Имя:</b> <span th:text="${profile.getName()}"></span></p><br>
+    <p><b>Возраст:</b> <span th:text="${profile.getAge()}"></span></p><br>
+    <p><b>Пол:</b> <span th:text="${profile.getGender().name()}"></span></p><br>
+    <p><b>Гитхаб:</b> <span th:text="${profile.getGit()}"></span></p><br>
+    <p><b>Информация:</b> <span th:text="${profile.getInfo()}"></span></p><br>
+    <label>Список технологий:</label>
+    <div th:each="technology : ${profile.getTechnologies()}">
+        <span th:text="${technology.getName()}"></span>
+    </div>
+    <br>
+    <input type="submit" value="Изменить данные"><br><br><br>
+    <a th:href="@{/profile/all}">Посмотреть профили других пользователей</a>
+</form>
+
+</body>
+</html>
