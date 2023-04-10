@@ -1,56 +1,58 @@
-body {
-	font-family: Arial, sans-serif;
+.profile-create-block {
+	width: 700px;
+	height: 85%;
 }
 
-h1 {
+.profile-create-block-h1 {
+	color: #D0403E;
+	font-size: 24px;
+	margin-top: 40px;
 	text-align: center;
 }
 
-form {
-	margin: 0 auto;
-	max-width: 500px;
+.profile-create-form {
+	width: 600px;
+	margin-top: 25px;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
 }
 
-label {
-	display: block;
-	font-weight: bold;
-	margin-bottom: 5px;
+.profile-create-form label {
+	font-size: 18px;
+	font-weight: 700;
+	color: #555555;
+	font-family: 'JetBrains Mono', monospace;
+	font-weight: 600;
 }
 
-input[type="text"], input[type="number"], input[type="url"], textarea {
-	padding: 5px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
+.form-input {
+	font-size: 18px;
+	background-color: #EFEFEF;
 	border-radius: 3px;
-	font-size: 16px;
-	width: 100%;
-	box-sizing: border-box;
+	line-height: 40px;
+	margin: 2px 0 20px 0;
+	padding: 0 10px;
 }
 
-select {
-	padding: 5px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	font-size: 16px;
-	width: 100%;
-	box-sizing: border-box;
+.profile-create-form select {
+	height: 45px;
 }
 
-input[type="checkbox"] {
-	margin-right: 5px;
+.profile-create-form textarea {
+	resize: vertical;
+	height: 120px;
 }
 
-input[type="submit"] {
-	background-color: #4CAF50;
-	color: white;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 3px;
-	font-size: 16px;
-	cursor: pointer;
+.profile-create-form button {
+	align-self: center;
+	height: 55px;
+	width: 50%;
+	margin: 10px 0 30px 0;
+	font-size: 22px;
+	font-weight: 700;
 }
 
-input[type="submit"]:hover {
-	background-color: #45a049;
+.profile-create-skills-picker div {
+	width: 150px;
 }

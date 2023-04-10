@@ -1,25 +1,34 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
+	<title>Авторизація</title>
+	<link rel="icon" type="image/png" href="/img/app.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/login.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
-<body>
 
-<h2>Login Page</h2>
+<body class="main-block-fullscreen">
+	<div class="error">
+		<img src="https://cdn.pixabay.com/photo/2013/07/12/13/16/alert-146730_960_720.png" alt="">
+		<p id="error-text"></p>
+		<button class="standart-button" onclick="hideError()">OK</button>
+	</div>
 
-<form  th:action="@{/register}" method="post">
-
-    <label for="email">Username</label>:
-    <input type="text"  id="email" name="email" autofocus="autofocus"/>
-    </br> </br>
-    <label for="password">Password</label>:
-    <input type="password" id="password" name="password" />
-    </br></br>
-    <input type="submit" value="Log in" />
-
-</form>
-
+	<p class="app-name">Juniors Meet</p>
+	<div class="content-block auth-block">
+		<h1>Реєстрація</h1>
+		<form th:action="@{/register}" class="auth-form" method="post">
+			<label for="email">Електронна пошта</label>
+			<input type="email" id="email" name="email">
+			<label for="password">Пароль</label>
+			<input type="password" id="password" name="password">
+			<button class="standart-button" type="submit">Зареєструватися</button>
+			<p>Вже зареєстровані? <a href="/login">Увійдіть</a></p>
+		</form>
+	</div>
 </body>
+
+<script type="text/javascript" src="/js/login_validation.js"></script>
+
 </html>
