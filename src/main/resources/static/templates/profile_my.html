@@ -1,28 +1,77 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
-    <link th:href="@{../css/profile_create.css}" rel="stylesheet" type="text/css"/>
+	<title>Мій профіль</title>
+	<link rel="icon" type="image/png" href="/img/app.ico"/>
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/profile.css">
+	<link rel="stylesheet" type="text/css" href="/css/profile_my.css">
 </head>
-<body>
 
-<h1>Мой профиль</h1>
+<body class="app-body">
 
-<form th:action="@{/profile/update}" method="get">
-    <p><b>Имя:</b> <span th:text="${profile.getName()}"></span></p><br>
-    <p><b>Возраст:</b> <span th:text="${profile.getAge()}"></span></p><br>
-    <p><b>Пол:</b> <span th:text="${profile.getGender().name()}"></span></p><br>
-    <p><b>Гитхаб:</b> <span th:text="${profile.getGit()}"></span></p><br>
-    <p><b>Информация:</b> <span th:text="${profile.getInfo()}"></span></p><br>
-    <label>Список технологий:</label>
-    <div th:each="technology : ${profile.getTechnologies()}">
-        <span th:text="${technology.getName()}"></span>
-    </div>
-    <br>
-    <input type="submit" value="Изменить данные"><br><br><br>
-    <a th:href="@{/profile/all}">Посмотреть профили других пользователей</a>
-</form>
+	<div class="header">
+		<div class="header-app-name">
+			<img class="header-image" src="/img/logo.png" alt="">
+			<h1>Juniors Meet</h1>
+			<div class="header-image disabled">Big brain div</div>
+		</div>
+		<div class="header-links">
+			<a href="/">Пошук</a>
+			<a href="/">Проекти</a>
+			<a href="/">Мій акаунт</a>
+		</div>
+	</div>
+
+	<div class="main-block">
+		<div class="profile-sidebar-wrapper">
+			<div class="content-block profile-sidebar">
+				<button class="standart-button">Профіль</button>
+				<button class="standart-button">Акаунт</button>
+				<button class="standart-button">Вийти</button>
+			</div>
+		</div>
+		<div class="content-block main-content-block">
+			<div class="scrollable-block profile-my-form">
+				<h1 class="page-title">Мій профіль</h1>
+				<div class="inline-elements">
+					<p class="field-name">Ім'я</p>
+					<p class="field-value">Користувачка Батьківна</p>
+				</div>
+				<div class="inline-elements">
+					<p class="field-name">Вік</p>
+					<p class="field-value">21</p>
+				</div>
+				<div class="inline-elements">
+					<p class="field-name">Стать</p>
+					<p class="field-value">Не визначена</p>
+				</div>
+				<div class="inline-elements">
+					<p class="field-name">Git</p>
+					<p class="field-value">github.com/hehe</p>
+				</div>
+				<div class="inline-elements">
+					<p class="field-name">Інформація</p>
+					<p class="field-value">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+						eveniet quod officiis maxime illo eligendi perferendis et sequi vel minima.</p>
+				</div>
+				<div class="inline-elements">
+					<p class="field-name">Навички</p>
+					<div class="field-value">
+						<p>Formal grammar</p>
+						<p>UML</p>
+						<p>.NET</p>
+					</div>
+				</div>
+				<a href="/html/profile_update.html" class="standart-button">Оновити</a>
+			</div>
+		</div>
+		<div class="content-block profile-sidebar-wrapper disabled">
+		</div>
+	</div>
+
 
 </body>
+
 </html>
