@@ -18,9 +18,9 @@
 			<div class="header-image disabled">Big brain div</div>
 		</div>
 		<div class="header-links">
-			<a href="/">Пошук</a>
+			<a th:href="@{/project/all}">Пошук</a>
 			<a href="/">Проекти</a>
-			<a href="/">Мій акаунт</a>
+			<a th:href="@{/profile/me}">Мій акаунт</a>
 		</div>
 	</div>
 
@@ -37,34 +37,31 @@
 				<h1 class="page-title">Мій профіль</h1>
 				<div class="inline-elements">
 					<p class="field-name">Ім'я</p>
-					<p class="field-value">Користувачка Батьківна</p>
+					<p class="field-value" th:text="${profile.getName()}"></p>
 				</div>
 				<div class="inline-elements">
 					<p class="field-name">Вік</p>
-					<p class="field-value">21</p>
+					<p class="field-value" th:text="${profile.getAge()}"></p>
 				</div>
 				<div class="inline-elements">
 					<p class="field-name">Стать</p>
-					<p class="field-value">Не визначена</p>
+					<p class="field-value" th:text="${profile.getGender().name()}"></p>
 				</div>
 				<div class="inline-elements">
 					<p class="field-name">Git</p>
-					<p class="field-value">github.com/hehe</p>
+					<p class="field-value" th:text="${profile.getGit()}"></p>
 				</div>
 				<div class="inline-elements">
 					<p class="field-name">Інформація</p>
-					<p class="field-value">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
-						eveniet quod officiis maxime illo eligendi perferendis et sequi vel minima.</p>
+					<p class="field-value" th:text="${profile.getInfo()}"></p>
 				</div>
 				<div class="inline-elements">
 					<p class="field-name">Навички</p>
 					<div class="field-value">
-						<p>Formal grammar</p>
-						<p>UML</p>
-						<p>.NET</p>
+						<p th:each="technology : ${profile.getTechnologies()}" th:text="${technology.getName()}"></p>
 					</div>
 				</div>
-				<a href="/html/profile_update.html" class="standart-button">Оновити</a>
+				<a th:href="@{/profile/update}" class="standart-button">Оновити</a>
 			</div>
 		</div>
 		<div class="content-block profile-sidebar-wrapper disabled">

@@ -1,6 +1,6 @@
 package com.nyanband.university_organizer.service.impl;
 
-import com.nyanband.university_organizer.dto.TechnologyDTO;
+import com.nyanband.university_organizer.dto.ViewTechnologyDTO;
 import com.nyanband.university_organizer.dto.mapper.TechnologyMapper;
 import com.nyanband.university_organizer.repository.TechnologyRepository;
 import com.nyanband.university_organizer.service.TechnologyService;
@@ -24,7 +24,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     }
 
     @Override
-    public List<TechnologyDTO> findAll() {
+    public List<ViewTechnologyDTO> findAll() {
         return technologyRepository.findAll().stream()
                 .map(technologyMapper::toDto)
                 .collect(Collectors.toList());

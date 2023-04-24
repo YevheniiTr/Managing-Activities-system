@@ -2,6 +2,7 @@ package com.nyanband.university_organizer.dto.mapper;
 
 import com.nyanband.university_organizer.entity.BaseEntity;
 import com.nyanband.university_organizer.entity.Profile;
+import com.nyanband.university_organizer.entity.Project;
 import com.nyanband.university_organizer.entity.Technology;
 import com.nyanband.university_organizer.entity.User;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,10 @@ public class EntityMapper {
 
     public Technology toTechnology(Long technologyId) {
         return new Technology(technologyId);
+    }
+
+    public Project toProject(Long projectId) {
+        return new Project(projectId);
     }
 
     public Long toIdEntity(BaseEntity entity) {

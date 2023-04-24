@@ -2,9 +2,9 @@ package com.nyanband.university_organizer.controller;
 
 import com.nyanband.university_organizer.controller.util.SecurityUtils;
 import com.nyanband.university_organizer.controller.util.SessionUtils;
-import com.nyanband.university_organizer.dto.ProfileDTO;
+import com.nyanband.university_organizer.dto.ViewProfileDTO;
 import com.nyanband.university_organizer.dto.SaveProfileDTO;
-import com.nyanband.university_organizer.dto.TechnologyDTO;
+import com.nyanband.university_organizer.dto.ViewTechnologyDTO;
 import com.nyanband.university_organizer.entity.enums.Gender;
 import com.nyanband.university_organizer.exception.EntityNotFoundException;
 import com.nyanband.university_organizer.service.ProfileService;
@@ -50,7 +50,7 @@ public class ProfileController {
     @GetMapping({"/{profileId}"})
     public String getProfile(@PathVariable Long profileId,
                              Model model) {
-        ProfileDTO profile = profileService.find(profileId)
+        ViewProfileDTO profile = profileService.find(profileId)
                 .orElseThrow(() -> new EntityNotFoundException("Profile with id " + profileId + " does not exist"));
         model.addAttribute("profile", profile);
         return "profile_show";
@@ -65,7 +65,7 @@ public class ProfileController {
     @GetMapping({"/me"})
     public String getMyProfile(Model model,
                                HttpSession session) {
-        ProfileDTO profile = profileService.find(sessionUtils.getProfileId(session))
+        ViewProfileDTO profile = profileService.find((Long) sessionUtils.getProfileId(session))
                 .orElseThrow(() -> new EntityNotFoundException("User does not have a profile"));
         model.addAttribute("profile", profile);
 
@@ -96,7 +96,7 @@ public class ProfileController {
                 Arrays.asList(technologies)
         );
 
-        ProfileDTO savedProfile = profileService.save(saveProfileDTO);
+        ViewProfileDTO savedProfile = profileService.save(saveProfileDTO);
 
         sessionUtils.setProfileId(session, savedProfile.getId());
 
@@ -106,11 +106,11 @@ public class ProfileController {
     @GetMapping({"/update"})
     public String getUpdateProfilePage(Model model,
                                        HttpSession session) {
-        ProfileDTO profile = profileService.find(sessionUtils.getProfileId(session))
+        ViewProfileDTO profile = profileService.find((Long) sessionUtils.getProfileId(session))
                 .orElseThrow(() -> new EntityNotFoundException("User does not have a profile"));
         model.addAttribute("profile", profile);
 
-        List<TechnologyDTO> uncheckedTechnologies = technologyService.findAll();
+        List<ViewTechnologyDTO> uncheckedTechnologies = technologyService.findAll();
         uncheckedTechnologies.removeAll(profile.getTechnologies());
         model.addAttribute("technologies", uncheckedTechnologies);
 

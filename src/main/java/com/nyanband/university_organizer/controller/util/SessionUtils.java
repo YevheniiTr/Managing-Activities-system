@@ -8,8 +8,8 @@ import javax.servlet.http.HttpSession;
 public class SessionUtils {
     private static final String PROFILE_ID = "PROFILE_ID";
 
-    public long getProfileId(HttpSession session) {
-        return (long) session.getAttribute(PROFILE_ID);
+    public Object getProfileId(HttpSession session) {
+        return session.getAttribute(PROFILE_ID);
     }
 
     public void setProfileId(HttpSession session, long value) {

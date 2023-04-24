@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+	<title>Проекти</title>
+	<link rel="icon" type="image/png" href="/img/app.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/project_search.css">
+</head>
+
+<body class="app-body">
+
+	<div class="header">
+		<div class="header-app-name">
+			<img class="header-image" src="/img/logo.png" alt="">
+			<h1>Juniors Meet</h1>
+			<div class="header-image disabled">Big brain div</div>
+		</div>
+		<div class="header-links">
+			<a th:href="@{/project/all}">Пошук</a>
+			<a href="/">Проекти</a>
+			<a th:href="@{/profile/me}">Мій акаунт</a>
+		</div>
+	</div>
+
+	<div class="main-block">
+		<div class="project-sidebar-wrapper">
+			<form class="content-block project-sidebar scrollable-block">
+				<div class="project-sidebar-el">
+					<h1>Сортувати за</h1>
+					<select name="sort" id="sort">
+						<option value="NONE" selected></option>
+						<option value="popularity">Популярність</option>
+						<option value="data">Дата</option>
+					</select>
+				</div>
+
+				<div class="project-sidebar-el">
+					<h1>Навички</h1>
+					<div class="project-skills-picker">
+						<div><input type="checkbox" name="skills"><span>HTML</span></div>
+						<div><input type="checkbox" name="skills"><span>CSS</span></div>
+						<div><input type="checkbox" name="skills"><span>Javascript</span></div>
+						<div><input type="checkbox" name="skills"><span>C++</span></div>
+						<div><input type="checkbox" name="skills"><span>Python</span></div>
+						<div><input type="checkbox" name="skills"><span>Java</span></div>
+						<div><input type="checkbox" name="skills"><span>C#</span></div>
+						<div><input type="checkbox" name="skills"><span>Haskell</span></div>
+						<div><input type="checkbox" name="skills"><span>React</span></div>
+						<div><input type="checkbox" name="skills"><span>Angular</span></div>
+						<div><input type="checkbox" name="skills"><span>Vue.js</span></div>
+						<div><input type="checkbox" name="skills"><span>UML</span></div>
+						<div><input type="checkbox" name="skills"><span>Spring</span></div>
+						<div><input type="checkbox" name="skills"><span>.NET</span></div>
+						<div><input type="checkbox" name="skills"><span>Docker</span></div>
+						<div><input type="checkbox" name="skills"><span>Formal grammar</span></div>
+					</div>
+					<button class="standart-button">Фільтрувати</button>
+				</div>
+			</form>
+		</div>
+		<div class="content-block main-content-block">
+			<div class="scrollable-block project-search-block">
+				<div class="top-block">
+					<h1 class="page-title">Проекти</h1>
+					<a th:href="@{/project/create}" class="standart-button">Розмістити проект</a>
+				</div>
+				<form class="search-form" action="/">
+					<input class="search-form-input" type="text" placeholder="Пошук...">
+					<button>✓</button>
+				</form>
+				<div th:each="project : ${projects}" class="project-el">
+					<a th:href="@{/project/{id}(id = ${project.getId()})}" th:text="${project.getName()}">Нова соцмережа</a>
+					<p>
+						<span th:each="technology,iterStat : ${project.getTechnologies()}"
+							  th:text="${technology.getName()} + ${!iterStat.last ? ', ' : ''}"></span>
+					</p>
+					<p th:text="${project.getDescription()}"></p>
+					<hr>
+				</div>
+				<div class="page-select">
+					<a href="/" class="standart-button">1</a>
+					<a href="/" class="standart-button">2</a>
+					<a href="/" class="standart-button">3</a>
+				</div>
+			</div>
+		</div>
+		<div class="project-sidebar-wrapper">
+			<div class="content-block recommended-projects-block">
+				<h1>Рекомендовані проекти</h1>
+				<a href="/">Кулінарний додаток</a>
+				<a href="/">Аналог Facebook</a>
+				<a href="/">Система розумного дому</a>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+</html>

@@ -1,11 +1,11 @@
 package com.nyanband.university_organizer.service;
 
-import com.nyanband.university_organizer.dto.TechnologyDTO;
+import com.nyanband.university_organizer.dto.ViewTechnologyDTO;
 
 import java.util.List;
 
 public interface TechnologyService {
 
-    List<TechnologyDTO> findAll();
+    List<ViewTechnologyDTO> findAll();
 
 }

@@ -13,11 +13,11 @@
 	<div class="content-block profile-create-block">
 		<h1 class="profile-create-block-h1">Розкажіть про себе</h1>
 		<div class="scrollable-block">
-			<form class="profile-create-form" autocomplete="off">
+			<form class="profile-create-form" autocomplete="off" th:action="@{/profile/create}" method="post">
 				<label for="name">Ім'я</label>
-				<input class="form-input" type="text" name="name" id="name">
+				<input class="form-input" type="text" name="name" id="name" required>
 				<label for="age">Вік</label>
-				<input class="form-input" type="number" name="age" id="age">
+				<input class="form-input" type="number" name="age" id="age" required>
 				<label for="gender">Стать</label>
 				<select class="form-input" name="gender" id="gender">
 					<option value="NONE" selected></option>
@@ -26,27 +26,12 @@
 					<option value="FEMALE">Жінка</option>
 				</select>
 				<label for="git">Посилання на Git</label>
-				<input class="form-input" type="text" name="git" id="git">
+				<input class="form-input" type="text" name="git" id="git"  required>
 				<label for="info">Інформація</label>
 				<textarea class="form-input" type="info" name="info" id="info"></textarea>
 				<label for="info">Ваші навички</label>
 				<div class="skills-picker profile-create-skills-picker">
-					<div><input type="checkbox" name="skills"><span>HTML</span></div>
-					<div><input type="checkbox" name="skills"><span>CSS</span></div>
-					<div><input type="checkbox" name="skills"><span>Javascript</span></div>
-					<div><input type="checkbox" name="skills"><span>C++</span></div>
-					<div><input type="checkbox" name="skills"><span>Python</span></div>
-					<div><input type="checkbox" name="skills"><span>Java</span></div>
-					<div><input type="checkbox" name="skills"><span>C#</span></div>
-					<div><input type="checkbox" name="skills"><span>Haskell</span></div>
-					<div><input type="checkbox" name="skills"><span>React</span></div>
-					<div><input type="checkbox" name="skills"><span>Angular</span></div>
-					<div><input type="checkbox" name="skills"><span>Vue.js</span></div>
-					<div><input type="checkbox" name="skills"><span>UML</span></div>
-					<div><input type="checkbox" name="skills"><span>Spring</span></div>
-					<div><input type="checkbox" name="skills"><span>.NET</span></div>
-					<div><input type="checkbox" name="skills"><span>Docker</span></div>
-					<div><input type="checkbox" name="skills"><span>Formal grammar</span></div>
+					<div th:each="technology : ${technologies}"><input type="checkbox" name="technologies" th:value="${technology.getId()}"><span th:text="${technology.getName()}"></span></div>
 				</div>
 				<button class="standart-button">Створити</button>
 			</form>

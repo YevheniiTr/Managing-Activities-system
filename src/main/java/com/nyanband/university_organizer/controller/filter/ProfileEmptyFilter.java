@@ -45,7 +45,7 @@ public class ProfileEmptyFilter implements Filter {
             return;
         }
 
-        if (sessionUtils.getProfileId(request.getSession()) == 0) {
+        if (sessionUtils.getProfileId(request.getSession()) == null) {
             response.sendRedirect("/profile/create");
             return;
         }

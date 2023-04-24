@@ -1,6 +1,6 @@
 package com.nyanband.university_organizer.service.impl;
 
-import com.nyanband.university_organizer.dto.ProfileDTO;
+import com.nyanband.university_organizer.dto.ViewProfileDTO;
 import com.nyanband.university_organizer.dto.SaveProfileDTO;
 import com.nyanband.university_organizer.dto.mapper.ProfileMapper;
 import com.nyanband.university_organizer.entity.Profile;
@@ -28,7 +28,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public List<ProfileDTO> findAll() {
+    public List<ViewProfileDTO> findAll() {
         return profileRepository
                 .findAll()
                 .stream()
@@ -37,7 +37,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Optional<ProfileDTO> find(long id) {
+    public Optional<ViewProfileDTO> find(long id) {
         return profileRepository
                 .findById(id)
                 .map(profileMapper::toDto);
@@ -45,7 +45,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public Optional<ProfileDTO> findByUserId(long userId) {
+    public Optional<ViewProfileDTO> findByUserId(long userId) {
         return profileRepository
                 .findByUserId(userId)
                 .map(profileMapper::toDto);
@@ -53,14 +53,14 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public ProfileDTO save(SaveProfileDTO saveProfileDTO) {
+    public ViewProfileDTO save(SaveProfileDTO saveProfileDTO) {
         Profile savedProfile = profileRepository.save(profileMapper.toEntity(saveProfileDTO));
         return profileMapper.toDto(savedProfile);
     }
 
     @Override
     @Transactional
-    public ProfileDTO update(SaveProfileDTO saveProfileDTO) {
+    public ViewProfileDTO update(SaveProfileDTO saveProfileDTO) {
         Profile profileInitial = profileRepository.findByUserId(saveProfileDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User without profile trying to update profile"));
 

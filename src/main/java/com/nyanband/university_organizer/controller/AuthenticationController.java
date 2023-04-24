@@ -74,7 +74,7 @@ public class AuthenticationController {
                 .findByUserId(securityUtils.getUserId())
                 .ifPresent(profile -> sessionUtils.setProfileId(session, profile.getId()));
 
-        return new RedirectView("/profile/create");
+        return new RedirectView("/profile/me");
     }
 
     @PostMapping("/register")

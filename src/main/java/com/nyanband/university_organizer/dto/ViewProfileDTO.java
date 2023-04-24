@@ -6,12 +6,12 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-public class ProfileDTO {
+public class ViewProfileDTO {
     Long id;
     String name;
     Integer age;
     Gender gender;
     String git;
     String info;
-    List<TechnologyDTO> technologies;
+    List<ViewTechnologyDTO> technologies;
 }
