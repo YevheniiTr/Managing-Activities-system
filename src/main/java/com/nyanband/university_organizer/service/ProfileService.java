@@ -17,4 +17,8 @@ public interface ProfileService {
     ViewProfileDTO save(SaveProfileDTO saveProfileDTO);
 
     ViewProfileDTO update(SaveProfileDTO saveProfileDTO);
+
+    void banProfile(long id);
+
+    void makeAdmin(long id);
 }

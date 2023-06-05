@@ -13,9 +13,15 @@ public interface ProjectService {
 
     List<ViewProjectDTO> findAll();
 
+    List<ViewProjectDTO> findAppliedProjects(long userId);
+
     Optional<ViewProjectDTO> find(long id);
 
     ViewProjectDTO save(SaveProjectDTO projectDTO);
 
     ViewProjectDTO update(UpdateProjectDTO projectDTO);
+
+    void applyOnProject(long projectId, long userId);
+
+    void delete(long id);
 }

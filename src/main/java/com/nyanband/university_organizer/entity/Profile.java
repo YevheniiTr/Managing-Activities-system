@@ -36,6 +36,8 @@ public class Profile extends BaseEntity {
     @Column(name = "git_link")
     String git;
 
+    Boolean isBanned;
+
     String info;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -44,6 +46,9 @@ public class Profile extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "lang_id")
     )
     List<Technology> technologies;
+
+    @ManyToMany(mappedBy = "candidates")
+    List<Project> appliedProjects;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -76,8 +76,8 @@
                 <p class="param-value" th:text="${#temporals.format(project.getCreatedAt(), 'dd.MM.yyyy')}">
                     23.03.2023</p>
             </div>
-            <form class="apply-button-form" action="/">
-                <button class="standart-button apply-button">Відгукнутися</button>
+            <form class="apply-button-form" th:action="@{/project/apply/{id}(id = ${project.getId()})}" method="post">
+                <button class="standart-button apply-button" type="submit">Відгукнутися</button>
             </form>
         </div>
     </div>

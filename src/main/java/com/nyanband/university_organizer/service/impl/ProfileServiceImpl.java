@@ -4,8 +4,14 @@ import com.nyanband.university_organizer.dto.ViewProfileDTO;
 import com.nyanband.university_organizer.dto.SaveProfileDTO;
 import com.nyanband.university_organizer.dto.mapper.ProfileMapper;
 import com.nyanband.university_organizer.entity.Profile;
+import com.nyanband.university_organizer.entity.Role;
+import com.nyanband.university_organizer.entity.User;
+import com.nyanband.university_organizer.entity.enums.ERole;
 import com.nyanband.university_organizer.repository.ProfileRepository;
+import com.nyanband.university_organizer.repository.RoleRepository;
+import com.nyanband.university_organizer.repository.UserRepository;
 import com.nyanband.university_organizer.service.ProfileService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +22,13 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
-    ProfileRepository profileRepository;
-    ProfileMapper profileMapper;
-
-    @Autowired
-    public ProfileServiceImpl(ProfileRepository profileRepository, ProfileMapper profileMapper) {
-        this.profileRepository = profileRepository;
-        this.profileMapper = profileMapper;
-    }
+    private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final ProfileMapper profileMapper;
 
     @Override
     public List<ViewProfileDTO> findAll() {
@@ -54,8 +57,29 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     @Transactional
     public ViewProfileDTO save(SaveProfileDTO saveProfileDTO) {
-        Profile savedProfile = profileRepository.save(profileMapper.toEntity(saveProfileDTO));
+        Profile profile = profileMapper.toEntity(saveProfileDTO);
+        profile.setIsBanned(false);
+        Profile savedProfile = profileRepository.save(profile);
         return profileMapper.toDto(savedProfile);
+    }
+
+    @Override
+    @Transactional
+    public void banProfile(long id) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        profile.setIsBanned(true);
+    }
+
+    @Override
+    @Transactional
+    public void makeAdmin(long id) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+        User user = userRepository.findById(profile.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.getRoles().add(roleRepository.findByName(ERole.ADMIN).get());
+        userRepository.save(user);
     }
 
     @Override

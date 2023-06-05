@@ -1,19 +1,15 @@
 package com.nyanband.university_organizer.service.impl;
 
-import com.nyanband.university_organizer.dto.SaveProfileDTO;
 import com.nyanband.university_organizer.dto.SaveProjectDTO;
 import com.nyanband.university_organizer.dto.UpdateProjectDTO;
-import com.nyanband.university_organizer.dto.ViewProfileDTO;
 import com.nyanband.university_organizer.dto.ViewProjectDTO;
-import com.nyanband.university_organizer.dto.mapper.ProfileMapper;
 import com.nyanband.university_organizer.dto.mapper.ProjectMapper;
 import com.nyanband.university_organizer.entity.Profile;
 import com.nyanband.university_organizer.entity.Project;
 import com.nyanband.university_organizer.repository.ProfileRepository;
 import com.nyanband.university_organizer.repository.ProjectRepository;
-import com.nyanband.university_organizer.service.ProfileService;
 import com.nyanband.university_organizer.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,25 +19,28 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProfileRepository profileRepository;
     private final ProjectMapper projectMapper;
-    private final ProfileService profileService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository,
-                              ProjectMapper projectMapper,
-                              ProfileService profileService) {
-        this.projectRepository = projectRepository;
-        this.projectMapper = projectMapper;
-        this.profileService = profileService;
-    }
 
     @Override
     public List<ViewProjectDTO> findAll() {
         return projectRepository
                 .findAll()
                 .stream()
+                .map(projectMapper::toDto)
+                .collect(toList());
+    }
+
+    @Override
+    public List<ViewProjectDTO> findAppliedProjects(long userId) {
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return profile.getAppliedProjects().stream()
                 .map(projectMapper::toDto)
                 .collect(toList());
     }
@@ -70,5 +69,20 @@ public class ProjectServiceImpl implements ProjectService {
         project.setDescription(project.getDescription());
 
         return projectMapper.toDto(projectRepository.save(project));
+    }
+
+    @Override
+    public void applyOnProject(long projectId, long userId) {
+        Profile profile = profileRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Profile does not exist"));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project does not exist"));
+        project.getCandidates().add(profile);
+        projectRepository.save(project);
+    }
+
+    @Override
+    public void delete(long id) {
+        projectRepository.deleteById(id);
     }
 }

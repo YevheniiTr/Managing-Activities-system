@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Welcome to Code Slate</title>
+</head>
+<body>
+
+<h2>Ви не є адміністратором і не маєте доступу до ресурсу.</h2>
+
+Ваші ролі: <div sec:authentication="principal.authorities"></div>
+
+<div sec:authorize="isAuthenticated()">You are successfully authenticated</div>
+<div sec:authorize="hasRole('OPERATOR')">User got Operator role</div>
+<div sec:authorize="hasRole('ADMIN')">User got Admin role</div>
+
+</body>
+</html>

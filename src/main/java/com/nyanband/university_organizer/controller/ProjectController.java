@@ -4,8 +4,10 @@ import com.nyanband.university_organizer.controller.util.SecurityUtils;
 import com.nyanband.university_organizer.dto.SaveProjectDTO;
 import com.nyanband.university_organizer.dto.ViewProjectDTO;
 import com.nyanband.university_organizer.exception.EntityNotFoundException;
+import com.nyanband.university_organizer.service.ProfileService;
 import com.nyanband.university_organizer.service.ProjectService;
 import com.nyanband.university_organizer.service.TechnologyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,19 +24,12 @@ import java.util.Arrays;
 @Controller
 @RequestMapping("/project")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class ProjectController {
 
-    ProjectService projectService;
-    TechnologyService technologyService;
-    SecurityUtils securityUtils;
-
-    public ProjectController(ProjectService projectService,
-                             TechnologyService technologyService,
-                             SecurityUtils securityUtils) {
-        this.projectService = projectService;
-        this.technologyService = technologyService;
-        this.securityUtils = securityUtils;
-    }
+    private final ProjectService projectService;
+    private final TechnologyService technologyService;
+    private final SecurityUtils securityUtils;
 
     @GetMapping({"/{projectId}"})
     public String getProject(@PathVariable Long projectId,
@@ -58,7 +53,7 @@ public class ProjectController {
     }
 
     @PostMapping({"/create"})
-    public RedirectView createProfile(@RequestParam String name,
+    public RedirectView createProject(@RequestParam String name,
                                       @RequestParam String description,
                                       @RequestParam Long[] technologies) {
         SaveProjectDTO saveProjectDTO = new SaveProjectDTO(
@@ -74,45 +69,24 @@ public class ProjectController {
         return new RedirectView("/project/" + savedProject.getId());
     }
 
-//    @GetMapping({"/update"})
-//    public String getUpdateProfilePage(Model model,
-//                                       HttpSession session) {
-//        ViewProfileDTO profile = projectService.find((Long) sessionUtils.getProfileId(session))
-//                .orElseThrow(() -> new EntityNotFoundException("User does not have a profile"));
-//        model.addAttribute("profile", profile);
-//
-//        List<ViewTechnologyDTO> uncheckedTechnologies = technologyService.findAll();
-//        uncheckedTechnologies.removeAll(profile.getTechnologies());
-//        model.addAttribute("technologies", uncheckedTechnologies);
-//
-//        Set<Gender> uncheckedGenders = new HashSet<>(List.of(Gender.values()));
-//        uncheckedGenders.removeIf(g -> g.equals(profile.getGender()));
-//        model.addAttribute("genders", uncheckedGenders);
-//
-//        return "profile_update";
-//    }
+    @PostMapping({"/delete/{id}"})
+    public RedirectView createProfile(@PathVariable Long id) {
+        projectService.delete(id);
+        return new RedirectView("/admin/projects");
+    }
 
-//    @PostMapping({"/update"})
-//    public RedirectView updateProfile(@RequestParam String name,
-//                                      @RequestParam Integer age,
-//                                      @RequestParam String gender,
-//                                      @RequestParam String git,
-//                                      @RequestParam String info,
-//                                      @RequestParam Long[] technologies) {
-//
-//        SaveProfileDTO saveProfileDTO = new SaveProfileDTO(
-//                name,
-//                age,
-//                Gender.valueOf(gender),
-//                git,
-//                info,
-//                securityUtils.getUserId(),
-//                Arrays.asList(technologies)
-//        );
-//
-//        projectService.update(saveProfileDTO);
-//
-//        return new RedirectView("/profile/me");
-//    }
+    @PostMapping({"/apply/{projectId}"})
+    public RedirectView applyOnProject(@PathVariable Long projectId) {
+        long userId = securityUtils.getUserId();
+        projectService.applyOnProject(projectId, userId);
+        return new RedirectView("/project/" + projectId);
+    }
+
+    @GetMapping({"/my"})
+    public String getMyApplicationPage(Model model) {
+        long userId = securityUtils.getUserId();
+        model.addAttribute("projects", projectService.findAppliedProjects(userId));
+        return "my_application";
+    }
 
 }

@@ -25,8 +25,9 @@
 <div class="main-block">
     <div class="profile-sidebar-wrapper">
         <div class="content-block profile-sidebar">
-            <button class="standart-button">Профіль</button>
+            <a th:href="@{/profile/me}" class="standart-button">Профіль</a>
             <button class="standart-button">Акаунт</button>
+            <a th:href="@{/project/my}" class="standart-button">Заявки</a>
             <button class="standart-button">Вийти</button>
         </div>
     </div>

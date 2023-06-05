@@ -144,4 +144,16 @@ public class ProfileController {
         return new RedirectView("/profile/me");
     }
 
+    @PostMapping({"/ban/{id}"})
+    public RedirectView ban(@PathVariable Long id) {
+        profileService.banProfile(id);
+        return new RedirectView("/admin/profiles");
+    }
+
+    @PostMapping({"/make_admin/{id}"})
+    public RedirectView makeAdmin(@PathVariable Long id) {
+        profileService.makeAdmin(id);
+        return new RedirectView("/admin/profiles");
+    }
+
 }

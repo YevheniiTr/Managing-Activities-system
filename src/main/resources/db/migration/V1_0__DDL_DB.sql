@@ -19,13 +19,14 @@ CREATE TABLE user_role
 
 CREATE TABLE Profile
 (
-    id       BIGSERIAL PRIMARY KEY,
-    user_id  BIGSERIAL REFERENCES Users (id) NOT NULL,
-    name     VARCHAR(128)                    NOT NULL,
-    age      INT                             NOT NULL,
-    gender   INT                             NOT NULL,
-    git_link VARCHAR(128),
-    info     TEXT
+    id        BIGSERIAL PRIMARY KEY,
+    user_id   BIGSERIAL REFERENCES Users (id) NOT NULL,
+    is_banned BOOLEAN                         NOT NULL,
+    name      VARCHAR(128)                    NOT NULL,
+    age       INT                             NOT NULL,
+    gender    INT                             NOT NULL,
+    git_link  VARCHAR(128),
+    info      TEXT
 );
 
 CREATE TABLE Lang
@@ -58,7 +59,7 @@ CREATE TABLE Project_Member
 CREATE TABLE Project_Technology
 (
     project_id BIGSERIAL REFERENCES Project (id) NOT NULL,
-    lang_id    BIGSERIAL REFERENCES Lang (id) NOT NULL
+    lang_id    BIGSERIAL REFERENCES Lang (id)    NOT NULL
 );
 
 CREATE TABLE Project_Candidate
