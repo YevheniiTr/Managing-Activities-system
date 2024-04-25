@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <title>Мій профіль</title>
@@ -14,40 +14,48 @@
 
 <div class="header">
     <div class="header-app-name">
-        <h1>Juniors Meet</h1>
+        <h1>StandUp-Ticketing</h1>
     </div>
     <div class="header-links">
-        <a th:href="@{/project/all}">Пошук</a>
-        <a href="/">Проекти</a>
-        <a th:href="@{/profile/me}">Мій акаунт</a>
+        <a>Стендапи</a>
+        <a th:href="@{/sent_appl/}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a href="#" >Мій акаунт</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}"  >Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/application}" >Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </div>
 
 <div class="main-block">
-    <div class="profile-sidebar-wrapper">
-        <div class="content-block profile-sidebar">
-            <a th:href="@{/profile/me}" class="standart-button">Профіль</a>
-            <button class="standart-button">Акаунт</button>
-            <a th:href="@{/project/my}" class="standart-button">Заявки</a>
-            <button class="standart-button">Вийти</button>
-        </div>
-    </div>
+
+
     <div class="content-block main-content-block">
         <div class="scrollable-block profile-my-form">
-            <h1 class="page-title">Заявки</h1>
-            <div th:each="project : ${projects}" class="project-el">
-                <a th:href="@{/project/{id}(id = ${project.getId()})}" th:text="${project.getName()}">Нова соцмережа</a>
-                <p>Статус: не прийнято</p>
-                <p>
-						<span th:each="technology,iterStat : ${project.getTechnologies()}"
-                              th:text="${technology.getName()} + ${!iterStat.last ? ', ' : ''}"></span>
-                </p>
+            <h1 class="page-title"> Мої заявки</h1>
+            <div th:each="apl : ${userApplications}" class="project-el">
+                <a th:href="@{/application/{applicationId}(applicationId = ${apl.getId()})}"
+                   th:text="${apl.getTitle() }">Нова соцмережа</a>
+                <p></p>
+                <b>Статус:</b>
+                <b th:text="${apl.getStatus()}" style="size: 15px"></b>
+                <p></p>
+                <b>Дата відправки:</b>
+                <b th:text="${apl.getStartDate()}"></b>
                 <hr>
             </div>
         </div>
     </div>
-    <div class="content-block profile-sidebar-wrapper disabled">
-    </div>
+
+</div>
 </div>
 
 

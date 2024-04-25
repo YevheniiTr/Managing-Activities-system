@@ -87,6 +87,7 @@ input[type=checkbox] {
 .page-title {
     color: #D0403E;
 	font-size: 24px;
+	text-align: center;
 }
 
 .standart-button {
@@ -176,3 +177,125 @@ input[type=checkbox] {
 .disabled {
 	opacity: 0;
 }
+.appName{
+	text-align: center;
+}
+.app-text{
+	font-size: 20px;
+}
+.aprove-button{
+	flex-direction: row;
+	margin-top: 25px;
+}
+.dis-button{
+	background-color: #808080;
+	border: none;
+	border-radius: 1px;
+	/* display: flex; */
+	flex-direction: row;
+	float: right;
+	align-items: center;
+	justify-content: center;
+	width: 330px;
+	height: 30px;
+	color: white;
+	text-align: center;
+	user-select: none;
+	margin-right: 15px;
+	margin-left: 0px;
+	font-size: 18px;
+
+}
+
+
+.dis-button:link {
+	color: white;
+}
+
+.dis-button:visited {
+	color: white;
+}
+
+.dis-button:hover {
+	cursor: pointer;
+	transition: 200ms;
+	background-color: black;
+}
+.app-button{
+	background-color: #C12D3C;
+	border: none;
+	border-radius: 1px;
+	/* display: flex; */
+	flex-direction: row;
+	float: right;
+	align-items: center;
+	justify-content: center;
+	width: 330px;
+	height: 30px;
+	color: white;
+	text-align: center;
+	user-select: none;
+	margin-right: 0px;
+	margin-left: 5px;
+	font-size: 18px;
+
+}
+
+
+.app-button:link {
+	color: white;
+}
+
+.app-button:visited {
+	color: white;
+}
+
+.app-button:hover {
+	cursor: pointer;
+	transition: 200ms;
+	background-color: #b40012;
+}
+.menu{
+	/*display: flex;*/
+}
+
+.menu li{
+	width: 150px;
+	list-style: none;
+	background: black;
+	position: relative;
+}
+
+.menu a {
+	color: white;
+	text-decoration: none;
+	display: block;
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	transition: all .5s;
+}
+
+.menu a:hover {
+	background: black;
+}
+
+.menu ul {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	display: none;
+	padding: 5px;
+}
+
+.menu li:hover > ul {
+	display: block;
+}
+
+.menu ul ul {
+	display: none;
+	top: 0;
+	left: 100%;
+}
+
+

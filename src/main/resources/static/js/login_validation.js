@@ -32,7 +32,7 @@ if (form) {
         }
 
         if (!validatePassword(passwordInput.value)) {
-            errorText.textContent = 'Пароль повинен бути більше 8 символів, містити одну велику літеру та одну цифру';
+            errorText.textContent = 'Пароль повинен бути більше 8 символів, містити одну велику літеру, одну цифру та спеціальний символ ';
             errorBlock.style.display = 'flex';
             return;
         }

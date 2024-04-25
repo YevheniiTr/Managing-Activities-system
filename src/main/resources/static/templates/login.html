@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="uk">
 
 <head>
 	<title>Авторизація</title>
 	<link rel="icon" type="image/png" href="/img/app.ico" />
 	<link rel="stylesheet" type="text/css" href="/css/login.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+
 </head>
 
 <body class="main-block-fullscreen">
@@ -15,7 +17,7 @@
 		<button class="standart-button" onclick="hideError()">OK</button>
 	</div>
 
-	<p class="app-name">Juniors Meet</p>
+
 	<div class="content-block auth-block">
 		<h1>Авторизація</h1>
 		<form th:action="@{/login}" class="auth-form" method="post">

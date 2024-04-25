@@ -14,5 +14,30 @@
 <div sec:authorize="hasRole('OPERATOR')">User got Operator role</div>
 <div sec:authorize="hasRole('ADMIN')">User got Admin role</div>
 
+<div class="content-block main-content-block">
+	<div class="scrollable-block profile-my-form">
+		<h1 class="page-title" >Edge List</h1>
+		<div th:each="edge : ${edges}" class="project-el">
+			<a th:href="@{/edge/{edgeId}(edgeId = ${edge.getId()})}"
+			   th:text="${edge.getId() }">ID</a>
+			<p></p>
+			<b>StartDate:</b>
+			<b th:text="${edge.getDate()}" style="size: 15px"></b>
+			<p></p>
+			<b>Паросочетание:</b>
+			<b th:text="${edge.isMatching()}"></b>
+			<p></p>
+			<b>Venue:</b>
+			<b th:text ="${edge.getVenue().getTitle()}"></b>
+			<p></p>
+			<b>ApplicationToGetVenueID</b>
+			<b th:text ="${edge.getApplicationToGetVenue().getId()}"></b>
+			<hr>
+		</div>
+
+
+	</div>
+</div>
+
 </body>
 </html>
