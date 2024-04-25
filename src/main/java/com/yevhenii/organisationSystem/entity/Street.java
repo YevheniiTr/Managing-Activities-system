@@ -1,0 +1,31 @@
+package com.yevhenii.organisationSystem.entity;
+
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "street")
+public class Street extends BaseEntity {
+    @Column(name = "streetname")
+    private String streetName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cityid")
+    City city;
+    @OneToMany(mappedBy = "street",fetch = FetchType.LAZY)
+    List<Venue> venue;
+
+    public Street(Long id) {
+        super(id);
+    }
+
+    public Street(String streetName) {
+        this.streetName = streetName;
+    }
+}

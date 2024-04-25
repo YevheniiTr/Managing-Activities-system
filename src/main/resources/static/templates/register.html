@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 
 <head>
 	<title>Авторизація</title>
-	<link rel="icon" type="image/png" href="/img/app.ico" />
+
 	<link rel="stylesheet" type="text/css" href="/css/login.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
@@ -23,9 +23,14 @@
 			<input type="text" id="email" name="email">
 			<label for="password">Пароль</label>
 			<input type="password" id="password" name="password">
+			<div th:if="${errorMessageEmailIsTaken}" >
+				<p th:text="${errorMessageEmailIsTaken}" class="error-text"></p>
+			</div>
 			<button class="standart-button" type="submit">Зареєструватися</button>
 			<p>Вже зареєстровані? <a href="/login">Увійдіть</a></p>
 		</form>
+
+
 	</div>
 </body>
 
