@@ -39,17 +39,6 @@ public class ProfileEmptyFilter implements Filter {
         String uri = request.getRequestURI();
         boolean availableForUnauthorized = Arrays.stream(WebSecurityConfig.WHITELIST)
                 .anyMatch(pattern -> antPathMatcher.match(pattern, uri));
-
-    //        if (availableForUnauthorized || uri.equals("/profile/create")) {
-    //            chain.doFilter(request, servletResponse);
-    //            return;
-    //        }
-    //
-    //        if (sessionUtils.getProfileId(request.getSession()) == null) {
-    //            //response.sendRedirect("/profile/create");
-    //            return;
-    //        }
-
         chain.doFilter(request, servletResponse);
     }
 

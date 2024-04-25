@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <title>Надіслані заявки</title>
+  <link rel="icon" type="image/png" href="/img/app.ico"/>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/css/profile.css">
+  <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+  <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+  <div class="header-app-name">
+    <h1>StandUp-Ticketing</h1>
+  </div>
+  <div class="header-links">
+    <a >Стендапи</a>
+    <a th:href="@{/sent_appl/}">Організаторам</a>
+    <ul class="menu">
+      <li>
+        <a href="#" >Мій акаунт</a>
+        <ul>
+          <li>
+            <a th:href="@{/login}"  >Вийти</a>
+          </li>
+          <li>
+            <a th:href="@{/admin/applications}" >Заявки</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="main-block">
+
+
+  <div class="content-block main-content-block">
+    <div class="scrollable-block profile-my-form">
+      <h1 class="page-title" >Отримані заявки</h1>
+        <div th:each="appl : ${applications}" class="project-el">
+          <a th:href="@{/application/{applicationId}(applicationId = ${appl.getId()})}"
+                 th:text="${appl.getTitle() }">Нова соцмережа</a>
+          <p></p>
+          <b>Статус:</b>
+          <b th:text="${appl.getStatus()}" style="size: 15px"></b>
+          <p></p>
+          <b>Дата відправки:</b>
+          <b th:text="${appl.getStartDate()}"></b>
+          <hr>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>
