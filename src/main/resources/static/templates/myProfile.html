@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Мій профіль</title>
+    <link rel="icon" type="image/png" href="/img/app.ico"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="app-body">
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a>Стендапи</a>
+        <a th:href="@{/sent_appl/}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a th:href="@{/profile/me}">Мій акаунт</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/applications}">Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .btn-backhround{
+        background-color: #ebebeb;
+        width: 51px;
+        height: 51px;
+    }
+</style>
+
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title">Мій профіль</h1>
+            <div class="inline-elements">
+                <p class="field-name">Організація</p>
+                <p class="field-value" th:text="${profile.getOrganisation()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ім'я</p>
+                <p class="field-value" th:text="${profile.getFirstname()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Прізвище</p>
+                <p class="field-value" th:text="${profile.getSurname()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Телефон</p>
+                <p class="field-value" th:text="${profile.getPhone()}"></p>
+            </div>
+            <div class="inline-elements">
+                <a class="field-name" th:href="@{/venues}">Кількість майданчиків</a>
+                <p class="field-value" th:text ="${venueAmount}"></p>
+                <a th:href="@{/venues/create}" class="delete-but">
+                    <img src="/img/add.png"  class="btn-backhround" alt="AddVenue"/>
+                </a>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Кількість подій</p>
+                <p class="field-value" th:text ="${activityAmount}"></p>
+                <a th:href="@{/activity/create}" class="delete-but">
+                    <img src="/img/add.png"  class="btn-backhround" alt="AddActivity"/>
+                </a>
+            </div>
+            <a th:href="@{/profile/update}" class="standart-button">Оновити</a>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

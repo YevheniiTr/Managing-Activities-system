@@ -1,7 +1,9 @@
 package com.yevhenii.organisationSystem.services.serviceImpl;
 
+import com.yevhenii.organisationSystem.entity.Profile;
 import com.yevhenii.organisationSystem.entity.User;
 import com.yevhenii.organisationSystem.entity.enums.ERole;
+import com.yevhenii.organisationSystem.repository.ProfileRepository;
 import com.yevhenii.organisationSystem.repository.RoleRepository;
 import com.yevhenii.organisationSystem.repository.UserRepository;
 import com.yevhenii.organisationSystem.security.pojo.SignUpRequest;
@@ -17,23 +19,25 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     RoleRepository roleRepository;
+    ProfileRepository profileRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository) {
+                           RoleRepository roleRepository,
+                           ProfileRepository profileRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.profileRepository  = profileRepository;
     }
 
     @Override
     @Transactional
     public void register(SignUpRequest signUpRequest) {
-        userRepository.save(new User(
-                signUpRequest.getEmail(),
-                signUpRequest.getPassword(),
+        User user = new User(signUpRequest.getEmail(), signUpRequest.getPassword(),
                 Collections.singletonList(roleRepository.findByName(ERole.ROLE_USER).orElseThrow(
-                        () -> new RuntimeException("Role USER dont found")
-                ))
-        ));
+                                () -> new RuntimeException("Role USER dont found"))));
+        Profile profile = new Profile("","","","",user);
+        userRepository.save(user);
+        profileRepository.save(profile);
     }
 }

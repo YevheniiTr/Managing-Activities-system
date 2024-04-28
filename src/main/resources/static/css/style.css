@@ -298,4 +298,26 @@ input[type=checkbox] {
 	left: 100%;
 }
 
+.delete-img{
+	width: 35px;
+	height: 35px;
+}
+
+.delete-but:hover{
+	/*display: flex;*/
+	cursor: pointer;
+	transition: 200ms;
+}
+
+.delete-but {
+	background: #ebebeb;
+	border: none;
+	padding: 0;
+}
+
+.delete-img {
+
+	width: 30px;
+	height: 30px; /* You can adjust the size of the delete icon as needed */
+}
 

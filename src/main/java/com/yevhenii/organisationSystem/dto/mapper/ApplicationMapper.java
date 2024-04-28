@@ -3,6 +3,7 @@ package com.yevhenii.organisationSystem.dto.mapper;
 
 import com.yevhenii.organisationSystem.dto.*;
 import com.yevhenii.organisationSystem.entity.Activity;
+import com.yevhenii.organisationSystem.entity.Profile;
 import com.yevhenii.organisationSystem.entity.Venue;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,6 +22,9 @@ public interface ApplicationMapper {
     @Mapping(source = "street.city.cityName", target ="cityName")
     @Mapping(source = "id", target = "venueId")
     VenueDTO venueToDTO(Venue venue);
+    
+    ProfileDTO profileToDTO(Profile profile);
+
 
 
 }

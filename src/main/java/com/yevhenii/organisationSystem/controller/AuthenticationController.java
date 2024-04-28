@@ -83,6 +83,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public RedirectView register(@RequestParam String email,
                                  @RequestParam String password) {
+
         userService.register(new SignUpRequest(
                 email,
                 passwordEncoder.encode(password)

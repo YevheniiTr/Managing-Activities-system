@@ -7,12 +7,12 @@ import lombok.Value;
 
 @Value
 public class VenueDTO {
-    private Long venueId;
-    private String title;
-    private int maximumSeats;
-    private String description;
-    private String adresIndex;
-    private int rentPrice;
-    private String streetName;
-    private String cityName;
+     Long venueId;
+     String title;
+     int maximumSeats;
+     String description;
+     String adresIndex;
+     int rentPrice;
+     String streetName;
+     String cityName;
 }

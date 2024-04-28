@@ -79,6 +79,7 @@ CREATE TABLE Edge
 CREATE TABLE Profile
 (
     id           BIGSERIAL PRIMARY KEY,
+    userid   BIGSERIAL REFERENCES Users (id) NOT NULL,
     organisation varchar(50) NOT NULL,
     firstName    varchar(50) NOT NULL,
     surname      varchar(50) NOT NULL,

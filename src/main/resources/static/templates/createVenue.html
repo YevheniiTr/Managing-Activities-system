@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
 </head>
-<body>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a>Стендапи</a>
+        <a th:href="@{/sent_appl/}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a th:href="@{/sent_appl/}">Організаторам</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/applications}">Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <form class="scrollable-block profile-my-form"  th:action="@{/venues/createVenue}" method="post">
+            <h1 class="page-title">Додати майданчик</h1>
+            <div class="inline-elements">
+                <p class="field-name">Назва</p>
+                <input class="field-input" type="text" id="title" name="title" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Вмістимість</p>
+                <input class="field-input" type="text" id="maximumSeats" name="maximumSeats" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Опис</p>
+                <textarea class="field-input field-textarea" type="text" id="description" name="description"
+                          required></textarea>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Індекс</label>
+                <input class="field-input" id="adresIndex" name="adresIndex" required>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ціна аренди</p>
+                <input class="field-input" type="number" id="rentPrice" name="rentPrice" required>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Вулиця</label>
+                <input class="field-input" id="streetName" name="streetName" list="street-list" required>
+                <datalist id="street-list" class ="field-input">
+                    <option th:each="street : ${streetList}" th:value="${street.getStreetName()}" th:text="${street.getStreetName()}">Option</option>
+                </datalist>
+            </div>
+            <div class="inline-elements">
+                <label class="field-name">Місто</label>
+                <input class="field-input" type="text" id="cityName" name="cityName"  list="city-list" required>
+                <datalist id="city-list" class ="field-input">
+                    <option th:each="city : ${cityList}" th:value="${city.getCityName()}" th:text="${city.getCityName()}">Option</option>
+                </datalist>
+            </div>
+            <button class="standart-button">Зберегти</button>
+            <a th:href="@{/profile/me}" class="standart-button">Назад</a>
+        </form>
+    </div>
+
+</div>
+</div>
+
 
 </body>
+
 </html>

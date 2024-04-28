@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+
+<body class="app-body">
+
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a >Стендапи</a>
+        <a th:href="@{/sent_appl/}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a href="#" >Мій акаунт</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}"  >Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/applications}" >Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="main-block">
+
+    <div class="content-block main-content-block">
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title" th:text="${venue.getTitle()}">VenueTitle</h1>
+            <div class="inline-elements">
+                <p class="field-name" >Вмістимість</p>
+                <p class="field-value" th:text="${venue.getMaximumSeats()}"></p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Ціна аренди</p>
+                <p class="field-value" th:text="${venue.getRentPrice()}" >21</p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Опис</p>
+                <p class="field-value" th:text="${venue.getDescription()}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minimaLorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
+                    eveniet quod officiis maxime illo eligendi perferendis et sequi vel minima</p>
+            </div>
+            <div class="inline-elements">
+                <p class="field-name">Адреса</p>
+                <p class="field-value" th:text="${'м. '+ venue.getCityName()} +', вул. '+ ${venue.getStreetName()} +','+ ${venue.getAdresIndex()}">github.com/hehe</p>
+            </div>
+            <h1 class="page-title" >Найближчі події</h1>
+
+
+            <h1 class="page-title" >Проведені події</h1>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>

@@ -13,20 +13,20 @@
 
 <div class="header">
     <div class="header-app-name">
-        <h1>StandUp-Ticketing</h1>
+        <h1>EasyEvent</h1>
     </div>
     <div class="header-links">
-        <a >Стендапи</a>
+        <a>Стендапи</a>
         <a th:href="@{/sent_appl/}">Організаторам</a>
         <ul class="menu">
             <li>
-                <a href="#" >Мій акаунт</a>
+                <a th:href="@{/profile/me}">Мій акаунт</a>
                 <ul>
                     <li>
-                        <a th:href="@{/login}"  >Вийти</a>
+                        <a th:href="@{/login}">Вийти</a>
                     </li>
                     <li>
-                        <a th:href="@{/admin/applications}" >Заявки</a>
+                        <a th:href="@{/admin/applications}">Заявки</a>
                     </li>
                 </ul>
             </li>
@@ -34,20 +34,64 @@
     </div>
 </div>
 
+<style>
+    .content-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* This will push items to far ends */
+    }
+
+    .content-flex a {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .project-el p {
+        font-size: 16px;
+        margin-top: 12px;
+        line-height: 24px;
+    }
+
+    hr {
+        margin-top: 15px;
+        border-top: 2px solid #e7e7e7;
+    }
+
+    .delete-but {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .delete-img {
+        width: 35px;
+        height: 35px; /* You can adjust the size of the delete icon as needed */
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px; /* This will add 10px of space between buttons */
+    }
+
+</style>
 <div class="main-block">
-
-
     <div class="content-block main-content-block">
         <div class="scrollable-block profile-my-form">
-            <h1 class="page-title" >Власні майданчики</h1>
+            <h1 class="page-title">Власні майданчики</h1>
             <div th:each="venue : ${userVenuesList}" class="project-el">
-                <a th:href="@{/venues/{venueId}(venueId = ${venue.getVenueId()})}"
-                   th:text="${venue.getTitle() }"></a>
-                <p></p>
+                <div class="content-flex">
+                    <a th:href="@{/venues/{venueId}(venueId = ${venue.getVenueId()})}" th:text="${venue.getTitle()}">Title</a>
+                    <div class="button-group">
+                        <a th:href="@{'venues/delete/' + ${venue.getVenueId()}}" class="delete-but">
+                            <img src="/img/delete.png" class="delete-img" alt="Delete"/>
+                        </a>
+                        <a th:href="@{'venues/getUpdateForm/' + ${venue.getVenueId()}}" class="delete-but">
+                            <img src="/img/edit.png" class="delete-img" alt="Edit"/>
+                        </a>
+                    </div>
+                </div>
                 <hr>
             </div>
-
-
         </div>
     </div>
 

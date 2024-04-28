@@ -29,18 +29,19 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     List<Role> roles;
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    List <Activity> activityList;
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    List <Venue> venueList;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Activity> activityList;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Venue> venueList;
+    @OneToOne(mappedBy ="user", fetch  = FetchType.LAZY)
+    Profile profile;
+
 
     public User(String email, String password, List<Role> roles) {
         this.email = email;
         this.password = password;
         this.roles = roles;
     }
-
-
 
 
     public List<Role> getRoles() {
