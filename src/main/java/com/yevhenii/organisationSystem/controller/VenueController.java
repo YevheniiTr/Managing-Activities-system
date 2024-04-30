@@ -7,7 +7,7 @@ import com.yevhenii.organisationSystem.entity.City;
 import com.yevhenii.organisationSystem.entity.Street;
 import com.yevhenii.organisationSystem.services.CityService;
 import com.yevhenii.organisationSystem.services.VenueService;
-import com.yevhenii.organisationSystem.services.serviceImpl.StreetService;
+import com.yevhenii.organisationSystem.services.StreetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 @Controller
 public class VenueController {
 
@@ -45,7 +45,7 @@ public class VenueController {
             @RequestParam int rentPrice,
             @RequestParam String streetName,
             @RequestParam String cityName
-           ) {
+    ) {
         SaveVenueDTO saveVenueDTO = new SaveVenueDTO(title, maximumSeats, description, adresIndex, rentPrice, streetName, cityName);
         venueService.save(saveVenueDTO);
         return new RedirectView("/venues");
@@ -80,10 +80,7 @@ public class VenueController {
 
     @GetMapping("/venues")
     public String getUserVenues(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) System.out.println("не Авторизований");
         long userId = securityUtils.getUserId();
-        System.out.println(userId);
         model.addAttribute("userVenuesList", venueService.findAllById(userId));
         return "userVenues";
     }

@@ -1,4 +1,4 @@
-package com.yevhenii.organisationSystem.services.serviceImpl;
+package com.yevhenii.organisationSystem.services;
 
 import com.yevhenii.organisationSystem.entity.Street;
 import org.springframework.stereotype.Service;

@@ -16,17 +16,17 @@
         <h1>EasyEvent</h1>
     </div>
     <div class="header-links">
-        <a >Стендапи</a>
+        <a th:href="@{/venues/create}">Власникам майданчиків</a>
         <a th:href="@{/sent_appl/}">Організаторам</a>
         <ul class="menu">
             <li>
-                <a th:href="@{/sent_appl/}">Організаторам</a>
+                <a th:href="@{/profile/me}">Мій акаунт</a>
                 <ul>
                     <li>
-                        <a th:href="@{/login}"  >Вийти</a>
+                        <a th:href="@{/login}">Вийти</a>
                     </li>
                     <li>
-                        <a th:href="@{/admin/applications}" >Заявки</a>
+                        <a th:href="@{/applications/my}">Заявки</a>
                     </li>
                 </ul>
             </li>

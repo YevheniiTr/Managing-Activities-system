@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -60,5 +61,26 @@ public class ActivityServiceImpl  implements ActivityService {
                 .stream()
                 .map(applicationMapper::activityToDto)
                 .collect(toList());
+    }
+
+    @Override
+    public Optional<ActivityDTO> findById(Long activityId) {
+        return activityRepository
+                .findById(activityId)
+                .map(applicationMapper::activityToDto);
+    }
+
+    @Override
+    public void update(SaveActivityDTO saveActivityDTO,Long activityId) {
+        Optional<Activity> optionalActivity = activityRepository.findById(activityId);
+        Activity activity = optionalActivity.get();
+        Long userId = securityUtils.getUserId();
+        activity.setUser(new User(userId));
+        activity.setTitle(saveActivityDTO.getTitle());
+        activity.setDescription(saveActivityDTO.getDescription());
+        activity.setOrganisation(saveActivityDTO.getOrganisation());
+        activity.setGenre(saveActivityDTO.getGenre());
+        activity.setActivityType(saveActivityDTO.getActivityType());
+        activityRepository.save(activity);
     }
 }

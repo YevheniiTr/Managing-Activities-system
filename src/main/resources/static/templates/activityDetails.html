@@ -38,52 +38,40 @@
 <div class="main-block">
 
     <div class="content-block main-content-block">
-        <form class="scrollable-block profile-my-form"  th:action="@{/venues/createVenue}" method="post">
-            <h1 class="page-title">Додати майданчик</h1>
+        <div class="scrollable-block profile-my-form">
+            <h1 class="page-title" th:text="${activity.getTitle()}"></h1>
             <div class="inline-elements">
                 <p class="field-name">Назва</p>
-                <input class="field-input" type="text" id="title" name="title" required>
+                <p class="field-value"    th:text="${activity.getTitle()}" >
             </div>
             <div class="inline-elements">
                 <p class="field-name">Вмістимість</p>
-                <input class="field-input" type="text" id="maximumSeats" name="maximumSeats" required>
+                <p class="field-value"    th:text="${activity.getAmountSeats()}" >
             </div>
             <div class="inline-elements">
                 <p class="field-name">Опис</p>
-                <textarea class="field-input field-textarea" type="text" id="description" name="description"
-                          required></textarea>
+                <p class="field-value"    th:text="${activity.getDescription()}"></p>
             </div>
             <div class="inline-elements">
-                <label class="field-name">Індекс</label>
-                <input class="field-input" id="adresIndex" name="adresIndex" required>
+                <label class="field-name">Організація</label>
+                <p class="field-value"   type="text" th:text="${activity.getOrganisation()}">
             </div>
             <div class="inline-elements">
-                <p class="field-name">Ціна аренди</p>
-                <input class="field-input" type="number" id="rentPrice" name="rentPrice" required>
+                <label class="field-name">Жанр</label>
+                <p class="field-value" id="genre"  th:text="${activity.getGenre()}">
             </div>
             <div class="inline-elements">
-                <label class="field-name">Вулиця</label>
-                <input class="field-input" id="streetName" name="streetName" list="street-list" required>
-                <datalist id="street-list" class ="field-input">
-                    <option th:each="street : ${streetList}" th:value="${street.getStreetName()}" th:text="${street.getStreetName()}">Option</option>
-                </datalist>
+                <label class="field-name">Стиль</label>
+                <p class="field-value" type="text"  th:text="${activity.getActivityType()}">
             </div>
-            <div class="inline-elements">
-                <label class="field-name">Місто</label>
-                <input class="field-input" type="text" id="cityName" name="cityName"  list="city-list" required>
-                <datalist id="city-list" class ="field-input">
-                    <option th:each="city : ${cityList}" th:value="${city.getCityName()}" th:text="${city.getCityName()}">Option</option>
-                </datalist>
-            </div>
-            <button class="standart-button">Зберегти</button>
             <a th:href="@{/profile/me}" class="standart-button">Назад</a>
-        </form>
+        </div>
     </div>
-
 </div>
 </div>
 
 
 </body>
+
 
 </html>

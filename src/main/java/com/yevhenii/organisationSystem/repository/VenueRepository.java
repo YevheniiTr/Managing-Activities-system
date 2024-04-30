@@ -1,5 +1,6 @@
 package com.yevhenii.organisationSystem.repository;
 
+import com.yevhenii.organisationSystem.dto.VenueDTO;
 import com.yevhenii.organisationSystem.entity.Venue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,10 +18,9 @@ public interface VenueRepository extends JpaRepository<Venue, Long> {
     Venue findByVenueTitle(String title);
     @Query("select v from Venue v where v.title =:title and v.user.id =:userId")
     Venue findByVenueTitleAndUserId(String title,Long userId);
-
-
     @Query("select v from  Venue v where v.user.id =:userId")
     List<Venue> findAllById(Long userId);
-
     Optional<Venue> findById(Long venueId);
+    @Query("select v from Venue v ")
+    List<Venue> findAllFreeVenuesForCurrentDate();
 }

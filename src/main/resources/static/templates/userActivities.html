@@ -77,15 +77,15 @@
 <div class="main-block">
     <div class="content-block main-content-block">
         <div class="scrollable-block profile-my-form">
-            <h1 class="page-title">Власні майданчики</h1>
-            <div th:each="venue : ${userVenuesList}" class="project-el">
+            <h1 class="page-title">Cтворені події</h1>
+            <div th:each="activity : ${activityList}" class="project-el">
                 <div class="content-flex">
-                    <a th:href="@{/venues/{venueId}(venueId = ${venue.getVenueId()})}" th:text="${venue.getTitle()}">Title</a>
+                    <a th:href="@{/activity/{activityId}(activityId = ${activity.getId()})}" th:text="${activity.getTitle()}">Title</a>
                     <div class="button-group">
-                        <a th:href="@{'venues/delete/' + ${venue.getVenueId()}}" class="delete-but">
+                        <a th:href="@{'activity/delete/' + ${activity.getId()}}" class="delete-but">
                             <img src="/img/delete.png" class="delete-img" alt="Delete"/>
                         </a>
-                        <a th:href="@{'venues/getUpdateForm/' + ${venue.getVenueId()}}" class="delete-but">
+                        <a th:href="@{'activity/getUpdateForm/' + ${activity.getId()}}" class="delete-but">
                             <img src="/img/edit.png" class="delete-img" alt="Edit"/>
                         </a>
                     </div>

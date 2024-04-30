@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Подання заявки</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_create.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date().toISOString().split("T")[0]; // формат YYYY-MM-DD
+            const startDateInput = document.getElementById("startDate");
+            const endDateInput = document.getElementById("endDate");
+            const errorMessage = document.getElementById("error-message");
+
+            // Встановлюємо мінімальну дату на сьогоднішню дату
+            startDateInput.setAttribute("min", today);
+
+            startDateInput.addEventListener("change", function () {
+                const startDate = startDateInput.value;
+                if (startDate) {
+                    // Встановлюємо мінімальну дату для дати закінчення
+                    endDateInput.setAttribute("min", startDate);
+                }
+            });
+
+            const form = document.querySelector(".profile-create-form");
+            form.addEventListener("submit", function (event) {
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+
+                errorMessage.textContent = "";
+
+                // Перевірка на неправильну дату закінчення
+                if (endDate < startDate) {
+                    event.preventDefault();
+                    errorMessage.textContent = "Дата закінчення не може бути раніше дати початку!";
+                    return;
+                }
+
+                const startHour = parseInt(document.getElementById("startTimeHour").value);
+                const startMinute = parseInt(document.getElementById("startTimeMin").value);
+                const endHour = parseInt(document.getElementById("endTimeHour").value);
+                const endMinute = parseInt(document.getElementById("endTimeMin").value);
+
+                const formatMinutes = (minutes) => {
+                    return minutes < 10 ? `0${minutes}` : `${minutes}`;
+                };
+
+                if (startDate === endDate) {
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+                    const endTimeInMinutes = endHour * 60 + endMinute;
+
+                    if (endTimeInMinutes < startTimeInMinutes) {
+                        event.preventDefault();
+                        errorMessage.textContent = "Час закінчення не може бути раніше часу початку!";
+                    }
+                }
+            });
+        });
+        // $(document).ready(function() {
+        //     // Функція для оновлення вмісту таблиці
+        //     function updateTable(venues) {
+        //         const tableBody = $("#venueTableBody");
+        //         tableBody.empty(); // Очищення попереднього вмісту
+        //
+        //         // Додавання нових рядків до таблиці
+        //         venues.forEach(venue => {
+        //             // const row = document.createElement("tr");
+        //             //
+        //             // row.innerHTML = `
+        //             //         <td><input type="checkbox" name="venueList"  id ="venueList" th:value="${venue.id}"/></td>
+        //             //         <td>
+        //             //             <a target="_blank"  th:href="@{/venues/{venueId}(venueId = ${venue.id})}" th:text="${venue.getTitle()}"></a>
+        //             //         </td>
+        //             //         <td th:text="${venue.rentPrice}"></td>
+        //             //         <td th:text="${venue.maximumSeats()}"></td>
+        //             //         <td th:text="${venue.cityName}"></td>
+        //             //     `;
+        //
+        //             const row = $("<tr></tr>");
+        //
+        //             row.append($("<td></td>").append(
+        //                 $("<input/>", {
+        //                     type: "checkbox",
+        //                     name: "venueList",
+        //                     id:"venueList",
+        //                     value: venue.venueId
+        //                 })
+        //             ));
+        //
+        //             row.append($("<td></td>").append(
+        //                 $("<a/>", {
+        //                     href: `/venues/${venue.venueId}`,
+        //                     text: venue.title,
+        //                     target: "_blank"
+        //                 })
+        //             ));
+        //
+        //             row.append($("<td></td>").text(venue.rentPrice));
+        //             row.append($("<td></td>").text(venue.maximumSeats));
+        //             row.append($("<td></td>").text(venue.cityName));
+        //
+        //             tableBody.append(row);
+        //         });
+        //     }
+        //
+        //     // Обробка події форми
+        //     $("#filter-form").on("submit", function(event) {
+        //         event.preventDefault(); // Зупинення стандартної поведінки (перезавантаження сторінки)
+        //
+        //         const filterDate = document.getElementById("filterDate").value;
+        //         const filterCity = document.getElementById("filterCity").value;
+        //         const filterPrice = document.getElementById("filterPrice").value;
+        //         const filterCapacity = document.getElementById("filterCapacity").value;
+        //
+        //         const formData = {
+        //             date: filterDate,
+        //             city: filterCity,
+        //             price: filterPrice,
+        //             capacity: filterCapacity
+        //         };
+        //
+        //
+        //         // Відправлення POST-запиту
+        //         $.post("/filter", formData, function(response) {
+        //             // Оновлення таблиці
+        //             updateTable(response.filteredList);
+        //         });
+        //     });
+        // });
+        // $(document).ready(function() {
+        //     // Функція для оновлення вмісту таблиці
+        //     function updateTable(venues) {
+        //         const tableBody = $("#venueTableBody");
+        //         tableBody.empty(); // Очищення попереднього вмісту
+        //
+        //         // Додавання нових рядків до таблиці
+        //         venues.forEach(venue => {
+        //             const row = $("<tr></tr>");
+        //
+        //             row.append($("<td></td>").append(
+        //                 $("<input/>", {
+        //                     type: "checkbox",
+        //                     name: "venueList",
+        //                     id:"venueIdList",
+        //                     value: venue.venueId // Значення чекбоксу — ID майданчика
+        //                 })
+        //             ));
+        //
+        //             row.append($("<td></td>").append(
+        //                 $("<a/>", {
+        //                     href: `/venues/${venue.venueId}`, // Посилання на майданчик
+        //                     text: venue.title,
+        //                     target: "_blank"
+        //                 })
+        //             ));
+        //
+        //             row.append($("<td></td>").text(venue.rentPrice));
+        //             row.append($("<td></td>").text(venue.maximumSeats));
+        //             row.append($("<td></td>").text(venue.cityName));
+        //
+        //             tableBody.append(row);
+        //         });
+        //     }
+        //
+        //     // Обробка події форми фільтрації
+        //     $("#filter-form").on("submit", function(event) {
+        //         event.preventDefault(); // Зупинення перезавантаження сторінки
+        //
+        //         // Збір параметрів фільтрації
+        //         const formData = {
+        //             date: $("#filterDate").val(),
+        //             city: $("#filterCity").val(),
+        //             price: $("#filterPrice").val(),
+        //             capacity: $("#filterCapacity").val()
+        //         };
+        //
+        //         // Відправлення POST-запиту для фільтрації
+        //         $.post("/filter", formData, function(response) {
+        //             // Оновлення таблиці
+        //             updateTable(response.filteredList);
+        //         });
+        //     });
+        //
+        //     // Обробка події форми надсилання заявки
+        //     $(".profile-create-form").on("submit", function(event) {
+        //         event.preventDefault(); // Зупинення перезавантаження сторінки
+        //
+        //         const venueIds = [];
+        //         $("input[name='venueList']:checked").each(function() {
+        //             venueIds.push($(this).val()); // Збір вибраних майданчиків
+        //         });
+        //         console.log("venueIds:", venueIds);
+        //         // Інші дані з форми
+        //         const newData = {
+        //             startDate: $("#startDate").val(),
+        //             startTimeHour: $("#startTimeHour").val(),
+        //             startTimeMin: $("#startTimeMin").val(),
+        //             endDate: $("#endDate").val(),
+        //             endTimeHour: $("#endTimeHour").val(),
+        //             endTimeMin: $("#endTimeMin").val(),
+        //             activityTitle: $("#activityTitle").val(),
+        //             venueIdList : venueIds // Масив вибраних майданчиків
+        //         };
+        //         console.log("formData:", newData);
+        //         // Відправлення POST-запиту
+        //         // $.post("/sendApplication", formData, function(response) {
+        //         //     // Перенаправлення після успішного надсилання заявки
+        //         //     window.location.href = "/index";
+        //         // });
+        //         $.ajax({
+        //             type: "POST", // Тип запиту
+        //             url: "/sendApplication", // Адреса запиту
+        //             data: JSON.stringify(newData), // Дані, які передаємо
+        //             success: function(response) { // Обробка у випадку успіху
+        //                 window.location.href = "/index"; // Перенаправлення після успішного надсилання
+        //             },
+        //             error: function(xhr, status, error) { // Обробка у випадку помилки
+        //                 console.error("Error sending application:", error);
+        //             }
+        //         });
+        //
+        //     });
+        // });
+
+    </script>
+
+
+</head>
+<style>
+    .app-text2 {
+        font-size: 20px;
+        text-align: justify;
+        text-indent: 40px;
+    }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    .venue-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .venue-table th, .venue-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .venue-table th {
+        background-color: #f2f2f2;
+    }
+
+    .filter-container {
+        margin: 10px 10px 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .filter-input {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 114px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+
+    .filter-button2 {
+        padding: 5px 10px;
+        background-color: #C12D3C;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: inline-block;
+    }
+
+    .button-div {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<body class="main-block-fullscreen">
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:href="@{/sendApplicationForm}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a th:href="@{/profile/me}">Мій акаунт</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/applications/my}">Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="main-block">
+    <div class="content-block main-content-block">
+        <h1 class="profile-create-block-h1">Організаторам</h1>
+        <br>
+        <div id="error-message" class="error-message"></div>
+        <div class="scrollable-block">
+            <form class="profile-create-form" id="filter-form" th:action="@{/filter}" method="post">
+                <p class="app-text2">Для знаходження майданчику для вашої події, вам необхідно обрати з таблиці
+                    майданчики та заповнити відповідну форму нижче</p>
+                <br>
+                <div class="filter-container">
+                    <input type="date" name="filterDate" class="filter-input" placeholder="Дата"/>
+                    <select name="filterCity"  id = "filterCity" class="filter-input" placeholder="Місто"/>
+                        <option  th:each="city : ${cityList}" th:value="${city.getCityName()}"
+                            th:text="${city.getCityName()}"></option>
+                    </select>
+                    <input type="number" name="filterPrice" class="filter-input" placeholder="Ціна" min="0"/>
+                    <input type="number" name="filterCapacity" class="filter-input" placeholder="Вмістимість" min="0"/>
+
+
+
+                    <div class="button-div">
+                        <button  class="filter-button2">Застосувати фільтри</button>
+                    </div>
+                </div>
+            </form>
+            <form class="profile-create-form" autocomplete="off" th:action="@{/sendApplication}" method="post"
+                  enctype="multipart/form-data">
+<!--            <form class="profile-create-form" autocomplete="off">-->
+                <table class="venue-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Назва майданчику</th>
+                        <th>Аренда</th>
+                        <th>Вмістимість</th>
+                        <th>Місто</th>
+                    </tr>
+                    </thead>
+                    <tbody id="venueTableBody">
+                    <tr th:each="venue : ${filteredList}">
+                        <td><input type="checkbox" name="venueList" id="venueList" th:value="${venue.id}"/></td>
+                        <td>
+                            <a target="_blank" th:href="@{/venues/{venueId}(venueId = ${venue.getId()})}"
+                               th:text="${venue.getTitle()}"></a>
+                        </td>
+                        <td th:text="${venue.getRentPrice()}"></td>
+                        <td th:text="${venue.getMaximumSeats()}"></td>
+                        <td th:text="${venue.getStreet().getCity().getCityName()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+
+                <label>Оберіть подію</label>
+                <select class="form-input" name="activityTitle" id="activityTitle" required>
+                    <option th:each="activity : ${activityList}" th:value="${activity.getTitle()}"
+                            th:text="${activity.getTitle()}"></option>
+                </select>
+
+                <label for="startDate">Дата проведення (початок)</label>
+                <input class="form-input" type="date" name="startDate" id="startDate" required/>
+
+                <label>Час початку</label>
+                <div class="time-selection">
+                    <select class="form-input" name="startTimeHour" id="startTimeHour" required>
+                        <option value="" selected disabled>Години</option>
+                        <option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}"
+                                th:text="${hour}"></option>
+                    </select>
+                    :
+                    <select class="form-input" name="startTimeMin" id="startTimeMin" required>
+                        <option value="" selected disabled>Хвилини</option>
+                        <option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"
+                                th:text="${minute}"></option>
+                    </select>
+                </div>
+
+                <label for="endDate">Дата проведення (кінець)</label>
+                <input class="form-input" type="date" name="endDate" id="endDate" required/>
+
+                <label>Час закінчення</label>
+                <div class="time-selection">
+                    <select class="form-input" name="endTimeHour" id="endTimeHour" required>
+                        <option value="" selected disabled>Години</option>
+                        <option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}"
+                                th:text="${hour}"></option>
+                    </select>
+                    :
+                    <select class="form-input" name="endTimeMin" id="endTimeMin" required>
+                        <option value="" selected disabled>Хвилини</option>
+                        <option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"
+                                th:text="${minute}"></option>
+                    </select>
+                </div>
+                <br>
+                <button class="standart-button">Надіслати заявку</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

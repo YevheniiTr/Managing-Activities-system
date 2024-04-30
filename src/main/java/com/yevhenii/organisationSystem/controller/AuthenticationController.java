@@ -20,7 +20,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthenticationController {
 
     SecurityUtils securityUtils;
@@ -68,16 +67,7 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        if (!securityUtils.checkAdmin()) {
-            System.out.println("Login success");
-
-            return new RedirectView("/venues");
-        } else {
-
-            System.out.println("Login success");
-            return new RedirectView("/index");
-        }
+        return new RedirectView("/index");
     }
 
     @PostMapping("/register")

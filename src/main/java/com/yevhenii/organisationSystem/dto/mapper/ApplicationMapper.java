@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring", uses = {EntityMapper.class})
 public interface ApplicationMapper {
     ApplicationMapper INSTANCE = Mappers.getMapper(ApplicationMapper.class);
-
+    @Mapping(source = "id",target = "id")
     ActivityDTO activityToDto(Activity activity);
     Activity SaveActivityDTOtoEntity(SaveActivityDTO saveActivityDTO);
     @Mapping(source = "street.streetName", target = "streetName")
@@ -25,6 +25,6 @@ public interface ApplicationMapper {
     
     ProfileDTO profileToDTO(Profile profile);
 
-
-
+    @Mapping(source = "venueId",target ="id")
+    Venue venueDTOToEntity(VenueDTO venueDTO);
 }

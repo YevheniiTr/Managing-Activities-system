@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity,Long> {
@@ -19,4 +20,6 @@ public interface ActivityRepository extends JpaRepository<Activity,Long> {
     boolean isActivityBelongToUserByTitle(Long userId, String activityTitle);
     @Query("select a from  Activity a where a.user.id =:userId")
     List<Activity> findAllByUserId(Long userId);
+
+    Optional<Activity> findById(Long activityId);
 }

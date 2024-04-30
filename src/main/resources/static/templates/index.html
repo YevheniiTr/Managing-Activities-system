@@ -1,0 +1,22 @@
+<div class="header">
+    <div class="header-app-name">
+        <h1>EasyEvent</h1>
+    </div>
+    <div class="header-links">
+        <a th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:href="@{/sendApplicationForm}">Організаторам</a>
+        <ul class="menu">
+            <li>
+                <a th:href="@{/profile/me}">Мій акаунт</a>
+                <ul>
+                    <li>
+                        <a th:href="@{/login}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/applications/my}">Заявки</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

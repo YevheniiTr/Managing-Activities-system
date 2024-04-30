@@ -1,13 +1,11 @@
 package com.yevhenii.organisationSystem.dto;
-
-
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.sql.Timestamp;
 @Getter
 @Setter
+@AllArgsConstructor
 public class SaveApplicationDTO {
     private String startDate;
     private String startTime;

@@ -38,28 +38,27 @@
 <div class="main-block">
 
     <div class="content-block main-content-block">
-        <form class="scrollable-block profile-my-form"  th:action="@{/activity/create}" method="post">
+        <form class="scrollable-block profile-my-form"  th:action="@{/activity/update/{activityId}(activityId = ${activity.getId()})}" method="post">
             <h1 class="page-title">Створити подію</h1>
             <div class="inline-elements">
                 <p class="field-name">Назва</p>
-                <input class="field-input" type="text" id="title" name="title" required>
+                <input class="field-input" type="text" id="title" name="title"  th:value="${activity.getTitle()}" required>
             </div>
             <div class="inline-elements">
                 <p class="field-name">Вмістимість</p>
-                <input class="field-input" type="number" id="amountSeats" name="amountSeats" required>
+                <input class="field-input" type="number" id="amountSeats" name="amountSeats" th:value="${activity.getAmountSeats()}" required>
             </div>
             <div class="inline-elements">
                 <p class="field-name">Опис</p>
-                <textarea class="field-input field-textarea" type="text" id="description" name="description"
-                          required></textarea>
+                <textarea class="field-input field-textarea" type="text" id="description" name="description" th:text="${activity.getDescription()}"  required></textarea>
             </div>
             <div class="inline-elements">
                 <label class="field-name">Організація</label>
-                <input class="field-input" id="organisation" name ="organisation" type ="text" th:value="${profile.getOrganisation()}"  th:text="${profile.getOrganisation()}"  required>
+                <input class="field-input" id="organisation" name ="organisation" type ="text" th:value="${activity.getOrganisation()}"  th:text="${activity.getOrganisation()}"  required>
             </div>
             <div class="inline-elements">
                 <label class="field-name">Жанр</label>
-                <input class="field-input" id="genre" name="genre" list="genre-list" required onchange="updateStyles()">
+                <input class="field-input" id="genre" name="genre" list="genre-list" th:value="${activity.getGenre()}" required onchange="updateStyles()">
                 <datalist id="genre-list">
                     <option>Театр</option>
                     <option>Концерт</option>
@@ -69,11 +68,11 @@
             </div>
             <div class="inline-elements">
                 <label class="field-name">Стиль</label>
-                <input class="field-input" type="text" id="activityType" name="activityType" list="styles-list" required>
+                <input class="field-input" type="text" id="activityType" name="activityType" list="styles-list" th:value="${activity.getActivityType()}" required>
                 <datalist id="styles-list"></datalist>
             </div>
             <button class="standart-button">Зберегти</button>
-            <a th:href="@{/profile/me}" class="standart-button">Назад</a>
+            <a th:href="@{/activities}" class="standart-button">Назад</a>
         </form>
     </div>
 </div>

@@ -24,6 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/static/**",
             "/register",
             "/login",
+            "/index"
     };
 
     @Autowired

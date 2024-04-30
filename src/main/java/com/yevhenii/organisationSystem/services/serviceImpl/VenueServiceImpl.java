@@ -123,5 +123,15 @@ public class VenueServiceImpl implements VenueService {
         venueRepository.save(venue);
     }
 
+    @Override
+    public List<VenueDTO> findAllFreeVenuesForCurrentDate() {
+        return null;
+    }
+
+    @Override
+    public List<Venue> findAll() {
+        return venueRepository.findAll();
+    }
+
 
 }

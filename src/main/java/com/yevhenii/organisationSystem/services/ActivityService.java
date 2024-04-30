@@ -5,6 +5,7 @@ import com.yevhenii.organisationSystem.dto.SaveActivityDTO;
 import com.yevhenii.organisationSystem.entity.Activity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ActivityService {
     void save(SaveActivityDTO saveActivityDTO);
@@ -12,4 +13,6 @@ public interface ActivityService {
     void delete(Long activityId);
     boolean isActivityBelongToUserByTitle(Long userId,String activityTitle);
     List<ActivityDTO> findAllByUserId(Long userId);
+    Optional<ActivityDTO> findById(Long activityId);
+    void update(SaveActivityDTO saveActivityDTO,Long activityId);
 }
