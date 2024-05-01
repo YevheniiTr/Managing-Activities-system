@@ -6,6 +6,8 @@ import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.payload.request.SendApplicationRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,11 +20,13 @@ public interface ApplicationService {
 
     void sendApplication(SaveApplicationDTO saveApplicationDTO, List<Venue> venueTitleList);
 
-    void approve(Long applicationId);
+    void approve(Long edgeId);
 
-    void decline(Long applicationId);
+    void decline(Long edgeId);
 
     List<ApplicationToGetVenue> findOrganisatorApplicationsByUserId(long userId);
 
     List<Edge> findAllForOwner(long userId);
+
+    public Page<Edge> findPaginated(Pageable pageable,List<Edge> edgeList);
 }

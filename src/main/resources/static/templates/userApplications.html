@@ -31,6 +31,22 @@
 
     }
 
+    .venue-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .venue-table th, .venue-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .venue-table th {
+        background-color: #f2f2f2;
+    }
+
     .filter-container {
         margin: 10px 10px 10px;
         padding: 10px;
@@ -73,6 +89,10 @@
         text-align: center;
         font-size: 15px;
     }
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
 </style>
 
 
@@ -104,94 +124,114 @@
     <div class="content-block main-content-block">
         <h1 class="profile-create-block-h1">Заявки</h1>
         <br>
-        <form class="profile-create-form" th:action="@{/applications/my}" method="post">
-            <select name="role" class="field-input2" onchange="this.form.submit()">
-                <option th:value="notPicked" th:selected="${role == 'notPicked'}">Роль</option>
-                <option th:value="owner" th:selected="${role == 'owner'}">Власник майданчику</option>
-                <option th:value="organisator" th:selected="${role == 'organisator'}">Організатор</option>
-            </select>
-        </form>
+        <div class="scrollable-block">
+            <form class="profile-create-form" th:action="@{/applications/my}" method="post">
+                <select name="role" class="field-input2" onchange="this.form.submit()">
+                    <option th:value="notPicked" th:selected="${role == 'notPicked'}">Роль</option>
+                    <option th:value="owner" th:selected="${role == 'owner'}">Власник майданчику</option>
+                    <option th:value="organisator" th:selected="${role == 'organisator'}">Організатор</option>
+                </select>
+            </form>
 
 
-        <div th:if="${role == 'notPicked'}">
-            <br>
-            <h2 style="text-align: center">Оберіть вашу роль у системі</h2>
-        </div>
-
-        <div th:if="${role == 'organisator'}" class="scrollable-block profile-my-form">
-            <div th:if="${orgApplications.isEmpty()}">
-                <h2 style="text-align: center">Заявок !немає</h2>
-            </div>
-            <div th:each="appl, status : ${orgApplications}" class="project-el">
-                <h2 style="text-align: center" th:text="'Заявка №' + (${status.index} + 1)"></h2>
+            <div th:if="${role == 'notPicked'}">
                 <br>
-                <div class="content-flex">
-                    <b>До події:</b>
-                    <a th:href="@{/activity/{activityId}(activityId = ${appl.getActivity().getId()})}"
-                       th:text="${appl.getActivity.getTitle}">Title</a>
-                    <div class="button-group">
-                        <a th:href="@{'delete/' + ${appl.getId()}}" class="delete-but">
-                            <img src="/img/delete.png" class="delete-img" alt="Delete"/>
-                        </a>
-                    </div>
+                <h2 style="text-align: center">Оберіть вашу роль у системі</h2>
+            </div>
+
+            <div th:if="${role == 'organisator'}" class="scrollable-block profile-my-form">
+                <div th:if="${orgApplications.isEmpty()}">
+                    <h2 style="text-align: center">Заявок !немає</h2>
                 </div>
-                <p></p>
-                <b>Статус:</b>
-                <span th:switch="${appl.getStatus().name()}">
+                <div th:each="appl, status : ${orgApplications}" class="project-el">
+                    <h2 style="text-align: center" th:text="'Заявка №' + (${status.index} + 1)"></h2>
+                    <br>
+                    <div class="content-flex">
+                        <b>До події:</b>
+                        <a th:href="@{/activity/{activityId}(activityId = ${appl.getActivity().getId()})}"
+                           th:text="${appl.getActivity.getTitle}">Title</a>
+                        <div class="button-group">
+                            <a th:href="@{'delete/' + ${appl.getId()}}" class="delete-but">
+                                <img src="/img/delete.png" class="delete-img" alt="Delete"/>
+                            </a>
+                        </div>
+                    </div>
+                    <p></p>
+                    <b>Статус:</b>
+                    <span th:switch="${appl.getStatus().name()}">
                     <b th:case="'EXPECT'">На розгляданні</b>
                     <b th:case="'DECLINED'" style="color: #b40012">Відхилено</b>
                     <b th:case="'APPROVED'" style="color: darkgreen">Прийнято</b>
                 </span>
-                <br>
-                <b>Початок події: </b>
-                <b th:text="${appl.getStartDate()}"></b><br>
-                <b>Завершення події: </b>
-                <b th:text="${appl.getEndDate()}"></b><br>
-                <hr>
+                    <br>
+                    <b>Початок події: </b>
+                    <b th:text="${appl.getStartDate()}"></b><br>
+                    <b>Завершення події: </b>
+                    <b th:text="${appl.getEndDate()}"></b><br>
+                    <hr>
+                </div>
             </div>
-        </div>
-        <div th:if="${role == 'owner'}">
-            <form class="profile-create-form" id="filter-form" th:action="@{/applicationFilter}" method="post">
-                <br>
-                <div class="filter-container">
-                    <input type="date" name="filterDate" class="filter-input" placeholder="Дата" required/>
-                    <select name="filterVenue" id="filterVenue" class="filter-input" placeholder="Майданчик"/>
-                    <option th:each="edge : ${ownerEdges}" th:value="${edge.getVenue().getTitle()}"
-                            th:text="${edge.getVenue().getTitle()}"></option>
-                    </select>
-                    <div class="button-div">
-                        <button class="filter-button2">Застосувати фільтри</button>
-                    </div>
-                </div>
-            </form>
-                <div class="scrollable-block">
-                    <div th:each="edge, status : ${ownerEdges}" class="project-el">
-                        <h2 style="text-align: center" th:text="'Заявка №' + (${status.index} + 1)"></h2>
-                        <br>
-                        <div class="content-flex">
-                            <b>До події:</b>
-                            <a th:href="@{/activity/{activityId}(activityId = ${edge.getApplicationToGetVenue().getActivity().getId()})}"
-                               th:text="${edge.getApplicationToGetVenue().getActivity.getTitle}">Title</a>
+            <div th:if="${role == 'owner'}" class="profile-my-form">
+                <form class="profile-create-form" id="filter-form" th:action="@{/applicationFilter}" method="post">
+                    <br>
+                    <div class="filter-container">
+                        <input type="date" name="filterDate" class="filter-input" placeholder="Дата" required/>
+                        <select name="filterVenue" id="filterVenue" class="filter-input" placeholder="Майданчик"/>
+                        <option th:each="edge : ${ownerEdges}" th:value="${edge.getVenue().getTitle()}"
+                                th:text="${edge.getVenue().getTitle()}"></option>
+                        </select>
+                        <div class="button-div">
+                            <button class="filter-button2">Застосувати фільтри</button>
                         </div>
-                        <p></p>
-                        <b>Статус:</b>
-                        <span th:switch="${edge.getApplicationToGetVenue().getStatus().name()}">
-                                <b th:case="'EXPECT'">На розгляданні</b>
-                                <b th:case="'DECLINED'" style="color: #b40012">Відхилено</b>
-                                <b th:case="'APPROVED'" style="color: darkgreen">Прийнято</b>
-                        </span>
-                        <br>
-                        <b>Початок події: </b>
-                        <b th:text="${edge.getApplicationToGetVenue().getStartDate()}"></b><br>
-                        <b>Завершення події: </b>
-                        <b th:text="${edge.getApplicationToGetVenue().getEndDate()}"></b><br>
-                        <hr>
                     </div>
-                </div>
+                </form>
+                <table class="venue-table">
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Назва події</th>
+                        <th>Статус</th>
+                        <th>Початок події</th>
+                        <th>Завершення події</th>
+                        <th>Прийняти/Відхилити</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="edge, status : ${ownerEdges}">
+                        <td th:text="${status.index + 1}"></td>
+                        <td>
+                            <a th:href="@{/activity/{activityId}(activityId = ${edge.getApplicationToGetVenue().getActivity().getId()})}"
+                               th:text="${edge.getApplicationToGetVenue().getActivity().getTitle()}"
+                               target="_blank"></a>
+                        </td>
+                        <td>
+                <span th:switch="${edge.getApplicationToGetVenue().getStatus().name()}">
+                    <span th:case="'EXPECT'">На розгляданні</span>
+                    <span th:case="'DECLINED'" style="color: #b40012">Відхилено</span>
+                    <span th:case="'APPROVED'" style="color: darkgreen">Прийнято</span>
+                </span>
+                        </td>
+                        <td th:text="${edge.getApplicationToGetVenue().getStartDate()}"></td>
+                        <td th:text="${edge.getApplicationToGetVenue().getEndDate()}"></td>
+                        <td>
+                            <div class="button-group">
+                                <a th:if="${edge.getApplicationToGetVenue().getStatus().name() != 'APPROVED'}"
+                                   th:href="'/venueHolderApplications/approve/' + ${edge.getId()}">
+                                    <img src="/img/check-mark.png" class="delete-img" alt="Edit"/>
+                                </a>
+                                <a th:if="${edge.getApplicationToGetVenue().getStatus().name() != 'DECLINED'}"
+                                        th:href="'/venueHolderApplications/decline/' + ${edge.getId()}">
+                                    <img src="/img/delete-button.png" class="delete-img" alt="decline"/>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
                 <form>
                     <button class="standart-button">Розподілити майданчики</button>
                 </form>
-
+            </div>
         </div>
     </div>
 </div>

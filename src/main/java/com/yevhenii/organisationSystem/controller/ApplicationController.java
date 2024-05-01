@@ -6,6 +6,7 @@ import com.yevhenii.organisationSystem.dto.SaveApplicationDTO;
 import com.yevhenii.organisationSystem.dto.VenueDTO;
 import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.City;
+import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.repository.CityRepository;
 import com.yevhenii.organisationSystem.services.ActivityService;
@@ -13,6 +14,8 @@ import com.yevhenii.organisationSystem.services.ApplicationService;
 import com.yevhenii.organisationSystem.services.CityService;
 import com.yevhenii.organisationSystem.services.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +29,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -56,7 +61,6 @@ public class ApplicationController {
         if (model.containsAttribute("filteredList")) {
             model.addAttribute("venueList", model.getAttribute("filteredList"));
         } else {
-            //List<Venue> venueList = venueService.findAll();
             List<Venue> freeVenueList = venueService.findAllFreeVenuesForCurrentDate();
             model.addAttribute("venueList", freeVenueList);
         }
@@ -109,7 +113,6 @@ public class ApplicationController {
         String endTime = endTimeHour + ":" + endTimeMin;
         SaveApplicationDTO saveApplication = new SaveApplicationDTO(startDate, startTime, endDate, endTime, activityTitle);
         if (activityService.isActivityBelongToUserByTitle(securityUtils.getUserId(), saveApplication.getActivityTitle())) {
-            //applicationService.save(saveApplication);
             applicationService.sendApplication(saveApplication, venueList);
             return new RedirectView("/index");
         } else {
@@ -117,16 +120,16 @@ public class ApplicationController {
         }
     }
 
-    @PostMapping({"/venueHolderApplications/decline/{id}"})
+    @GetMapping({"/venueHolderApplications/decline/{id}"})
     public RedirectView decline(@PathVariable Long id) {
         applicationService.decline(id);
-        return new RedirectView("/index");
+        return new RedirectView("/applications/my");
     }
 
-    @PostMapping({"/venueHolderApplications/approve/{id}"})
+    @GetMapping({"/venueHolderApplications/approve/{id}"})
     public RedirectView approve(@PathVariable Long id) {
         applicationService.approve(id);
-        return new RedirectView("/index");
+        return new RedirectView("/applications/my");
     }
     @PostMapping("/filter")
     public RedirectView filterVenues(
@@ -159,7 +162,27 @@ public class ApplicationController {
         applicationService.delete(applicationId);
         return new RedirectView("/applications/my");
     }
-
-
+//    @GetMapping("applications/owner")
+//    public String listBooks(
+//            Model model,
+//            @RequestParam("page") Optional<Integer> page
+//           ) {
+//        int currentPage = page.orElse(1);
+//        int pageSize = 10;
+//        List<Edge> list = applicationService.findAllForOwner(securityUtils.getUserId());
+//        Page<Edge> edgePage = applicationService.findPaginated(PageRequest.of(currentPage - 1, pageSize),list);
+//
+//        model.addAttribute("ownerEdges", edgePage);
+//
+//        int totalPages = edgePage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//
+//        return "userApplications";
+//    }
 
 }

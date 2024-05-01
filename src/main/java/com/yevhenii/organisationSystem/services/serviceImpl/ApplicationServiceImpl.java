@@ -2,22 +2,19 @@ package com.yevhenii.organisationSystem.services.serviceImpl;
 
 import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.SaveApplicationDTO;
-import com.yevhenii.organisationSystem.dto.VenueDTO;
 import com.yevhenii.organisationSystem.dto.mapper.ApplicationMapper;
-import com.yevhenii.organisationSystem.entity.Activity;
-import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
-import com.yevhenii.organisationSystem.entity.Edge;
-import com.yevhenii.organisationSystem.entity.Venue;
+import com.yevhenii.organisationSystem.entity.*;
 import com.yevhenii.organisationSystem.entity.enums.EApplicationStatus;
-import com.yevhenii.organisationSystem.repository.ActivityRepository;
-import com.yevhenii.organisationSystem.repository.ApplicationRepository;
-import com.yevhenii.organisationSystem.repository.EdgeRepository;
-import com.yevhenii.organisationSystem.repository.VenueRepository;
+import com.yevhenii.organisationSystem.repository.*;
 import com.yevhenii.organisationSystem.services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,15 +26,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     EdgeRepository edgeRepository;
     SecurityUtils securityUtils;
     ApplicationMapper applicationMapper;
+    PlannedActivityRepository plannedActivityRepository;
 
     @Autowired
-    public ApplicationServiceImpl(ApplicationMapper applicationMapper, ActivityRepository activityRepository, ApplicationRepository applicationRepository, VenueRepository venueRepository, EdgeRepository edgeRepository, SecurityUtils securityUtils) {
+    public ApplicationServiceImpl( PlannedActivityRepository plannedActivityRepository,ApplicationMapper applicationMapper, ActivityRepository activityRepository, ApplicationRepository applicationRepository, VenueRepository venueRepository, EdgeRepository edgeRepository, SecurityUtils securityUtils) {
         this.activityRepository = activityRepository;
         this.applicationRepository = applicationRepository;
         this.venueRepository = venueRepository;
         this.edgeRepository = edgeRepository;
         this.securityUtils = securityUtils;
         this.applicationMapper = applicationMapper;
+        this.plannedActivityRepository = plannedActivityRepository;
     }
 
 
@@ -84,19 +83,30 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void approve(Long applicationId) {
-        Optional<ApplicationToGetVenue> applicationToGetVenue = applicationRepository.findById(applicationId);
-        ApplicationToGetVenue application = applicationToGetVenue.get();
-        application.setStatus(EApplicationStatus.APPROVED);
-        applicationRepository.save(application);
+    public void approve(Long edgeId) {
+        Optional<Edge> edgeOptional = edgeRepository.findById(edgeId);
+        Edge edge1 = edgeOptional.get();
+        ApplicationToGetVenue applicationToGetVenue = edge1.getApplicationToGetVenue();
+        applicationToGetVenue.setStatus(EApplicationStatus.APPROVED);
+        PlannedActivities plannedActivities = new PlannedActivities();
+        plannedActivities.setActivity(applicationToGetVenue.getActivity());
+        plannedActivities.setVenue(edge1.getVenue());
+        plannedActivities.setStatus("PLANED");
+        plannedActivities.setStartDate(edge1.getDate());
+        plannedActivities.setEndDate(applicationToGetVenue.getEndDate());
+        applicationRepository.save(applicationToGetVenue);
+        plannedActivityRepository.save(plannedActivities);
     }
 
     @Override
-    public void decline(Long applicationId) {
-        Optional<ApplicationToGetVenue> applicationToGetVenue = applicationRepository.findById(applicationId);
-        ApplicationToGetVenue application = applicationToGetVenue.get();
-        application.setStatus(EApplicationStatus.DECLINED);
-        applicationRepository.save(application);
+    public void decline(Long edgeId) {
+        Optional<Edge> edgeOptional = edgeRepository.findById(edgeId);
+        Edge edge1 = edgeOptional.get();
+        ApplicationToGetVenue applicationToGetVenue = edge1.getApplicationToGetVenue();
+        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityId(applicationToGetVenue.getActivity().getId());
+        if(plannedActivities.isPresent()) plannedActivityRepository.delete(plannedActivities.get());
+        applicationToGetVenue.setStatus(EApplicationStatus.DECLINED);
+        applicationRepository.save(applicationToGetVenue);
     }
 
     @Override
@@ -107,5 +117,24 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public List<Edge> findAllForOwner(long userId) {
         return applicationRepository.findAllForOwner(userId);
+    }
+
+    @Override
+    public Page<Edge> findPaginated(Pageable pageable,List<Edge> edgeList) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Edge> list;
+
+        if (edgeList.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, edgeList.size());
+            list = edgeList.subList(startItem, toIndex);
+        }
+
+        Page<Edge> edgePage
+                = new PageImpl<Edge>(list, PageRequest.of(currentPage, pageSize), edgeList.size());
+        return edgePage;
     }
 }
