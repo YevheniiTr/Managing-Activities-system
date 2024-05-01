@@ -31,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationMapper applicationMapper;
 
     @Autowired
-    public ApplicationServiceImpl(ApplicationMapper applicationMapper,ActivityRepository activityRepository, ApplicationRepository applicationRepository, VenueRepository venueRepository, EdgeRepository edgeRepository, SecurityUtils securityUtils) {
+    public ApplicationServiceImpl(ApplicationMapper applicationMapper, ActivityRepository activityRepository, ApplicationRepository applicationRepository, VenueRepository venueRepository, EdgeRepository edgeRepository, SecurityUtils securityUtils) {
         this.activityRepository = activityRepository;
         this.applicationRepository = applicationRepository;
         this.venueRepository = venueRepository;
@@ -59,13 +59,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void delete(Long activityId) {
-
+    public void delete(Long applicationId) {
+        edgeRepository.deleteAll(edgeRepository.findByApplicationId(applicationId));
+        applicationRepository.deleteById(applicationId);
     }
 
     @Override
-    public void sendApplication(SaveApplicationDTO saveApplicationDTO, List<VenueDTO> venueTitleList) {
-        save(saveApplicationDTO);
+    public void sendApplication(SaveApplicationDTO saveApplicationDTO, List<Venue> venueList) {
         Long userId = securityUtils.getUserId();
         ApplicationToGetVenue application = new ApplicationToGetVenue();
         application.setStatus(EApplicationStatus.EXPECT);
@@ -74,13 +74,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Activity activity = activityRepository.findByActivityTitle(saveApplicationDTO.getActivityTitle(), userId);
         application.setActivity(activity);
         applicationRepository.save(application);
-        List<Venue> venueList = new ArrayList<>();
-        for(VenueDTO venueDTO : venueTitleList){
-            venueList.add(applicationMapper.venueDTOToEntity(venueDTO));
-        }
         for (Venue venue : venueList) {
-            System.out.println(venue.getTitle());
-            //Venue venue = venueRepository.findByVenueTitle(venue.getTitle());
             Edge edge = new Edge();
             edge.setVenue(venue);
             edge.setApplicationToGetVenue(application);
@@ -88,32 +82,6 @@ public class ApplicationServiceImpl implements ApplicationService {
             edgeRepository.save(edge);
         }
     }
-    @Override
-    public void sendApplication2(SaveApplicationDTO saveApplicationDTO, List<Long> venueIds) {
-        save(saveApplicationDTO);
-        Long userId = securityUtils.getUserId();
-        ApplicationToGetVenue application = new ApplicationToGetVenue();
-        application.setStatus(EApplicationStatus.EXPECT);
-        application.setEndDate(saveApplicationDTO.getFinishTime());
-        application.setStartDate(saveApplicationDTO.getStartTime());
-        Activity activity = activityRepository.findByActivityTitle(saveApplicationDTO.getActivityTitle(), userId);
-        application.setActivity(activity);
-        applicationRepository.save(application);
-        List<Venue> venueList = new ArrayList<>();
-        for(Long id : venueIds){
-            venueList.add(venueRepository.findById(id).get());
-        }
-        for (Venue venue : venueList) {
-            System.out.println(venue.getTitle());
-            //Venue venue = venueRepository.findByVenueTitle(venue.getTitle());
-            Edge edge = new Edge();
-            edge.setVenue(venue);
-            edge.setApplicationToGetVenue(application);
-            edge.setDate(application.getStartDate());
-            edgeRepository.save(edge);
-        }
-    }
-
 
     @Override
     public void approve(Long applicationId) {
@@ -129,5 +97,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         ApplicationToGetVenue application = applicationToGetVenue.get();
         application.setStatus(EApplicationStatus.DECLINED);
         applicationRepository.save(application);
+    }
+
+    @Override
+    public List<ApplicationToGetVenue> findOrganisatorApplicationsByUserId(long userId) {
+        return applicationRepository.findOrganisatorApplicationsByUserId(userId);
+    }
+
+    @Override
+    public List<Edge> findAllForOwner(long userId) {
+        return applicationRepository.findAllForOwner(userId);
     }
 }

@@ -28,202 +28,27 @@
             form.addEventListener("submit", function (event) {
                 const startDate = startDateInput.value;
                 const endDate = endDateInput.value;
-
-                errorMessage.textContent = "";
-
-                // Перевірка на неправильну дату закінчення
-                if (endDate < startDate) {
-                    event.preventDefault();
-                    errorMessage.textContent = "Дата закінчення не може бути раніше дати початку!";
-                    return;
-                }
-
                 const startHour = parseInt(document.getElementById("startTimeHour").value);
                 const startMinute = parseInt(document.getElementById("startTimeMin").value);
                 const endHour = parseInt(document.getElementById("endTimeHour").value);
                 const endMinute = parseInt(document.getElementById("endTimeMin").value);
 
-                const formatMinutes = (minutes) => {
-                    return minutes < 10 ? `0${minutes}` : `${minutes}`;
-                };
+                errorMessage.textContent = "";
 
+                // Перевірка на неправильну дату закінчення
                 if (startDate === endDate) {
                     const startTimeInMinutes = startHour * 60 + startMinute;
                     const endTimeInMinutes = endHour * 60 + endMinute;
 
-                    if (endTimeInMinutes < startTimeInMinutes) {
+                    if (endTimeInMinutes <= startTimeInMinutes) {
+                        console.log(endTimeInMinutes);
+                        console.log(startTimeInMinutes);
                         event.preventDefault();
                         errorMessage.textContent = "Час закінчення не може бути раніше часу початку!";
                     }
                 }
             });
         });
-        // $(document).ready(function() {
-        //     // Функція для оновлення вмісту таблиці
-        //     function updateTable(venues) {
-        //         const tableBody = $("#venueTableBody");
-        //         tableBody.empty(); // Очищення попереднього вмісту
-        //
-        //         // Додавання нових рядків до таблиці
-        //         venues.forEach(venue => {
-        //             // const row = document.createElement("tr");
-        //             //
-        //             // row.innerHTML = `
-        //             //         <td><input type="checkbox" name="venueList"  id ="venueList" th:value="${venue.id}"/></td>
-        //             //         <td>
-        //             //             <a target="_blank"  th:href="@{/venues/{venueId}(venueId = ${venue.id})}" th:text="${venue.getTitle()}"></a>
-        //             //         </td>
-        //             //         <td th:text="${venue.rentPrice}"></td>
-        //             //         <td th:text="${venue.maximumSeats()}"></td>
-        //             //         <td th:text="${venue.cityName}"></td>
-        //             //     `;
-        //
-        //             const row = $("<tr></tr>");
-        //
-        //             row.append($("<td></td>").append(
-        //                 $("<input/>", {
-        //                     type: "checkbox",
-        //                     name: "venueList",
-        //                     id:"venueList",
-        //                     value: venue.venueId
-        //                 })
-        //             ));
-        //
-        //             row.append($("<td></td>").append(
-        //                 $("<a/>", {
-        //                     href: `/venues/${venue.venueId}`,
-        //                     text: venue.title,
-        //                     target: "_blank"
-        //                 })
-        //             ));
-        //
-        //             row.append($("<td></td>").text(venue.rentPrice));
-        //             row.append($("<td></td>").text(venue.maximumSeats));
-        //             row.append($("<td></td>").text(venue.cityName));
-        //
-        //             tableBody.append(row);
-        //         });
-        //     }
-        //
-        //     // Обробка події форми
-        //     $("#filter-form").on("submit", function(event) {
-        //         event.preventDefault(); // Зупинення стандартної поведінки (перезавантаження сторінки)
-        //
-        //         const filterDate = document.getElementById("filterDate").value;
-        //         const filterCity = document.getElementById("filterCity").value;
-        //         const filterPrice = document.getElementById("filterPrice").value;
-        //         const filterCapacity = document.getElementById("filterCapacity").value;
-        //
-        //         const formData = {
-        //             date: filterDate,
-        //             city: filterCity,
-        //             price: filterPrice,
-        //             capacity: filterCapacity
-        //         };
-        //
-        //
-        //         // Відправлення POST-запиту
-        //         $.post("/filter", formData, function(response) {
-        //             // Оновлення таблиці
-        //             updateTable(response.filteredList);
-        //         });
-        //     });
-        // });
-        // $(document).ready(function() {
-        //     // Функція для оновлення вмісту таблиці
-        //     function updateTable(venues) {
-        //         const tableBody = $("#venueTableBody");
-        //         tableBody.empty(); // Очищення попереднього вмісту
-        //
-        //         // Додавання нових рядків до таблиці
-        //         venues.forEach(venue => {
-        //             const row = $("<tr></tr>");
-        //
-        //             row.append($("<td></td>").append(
-        //                 $("<input/>", {
-        //                     type: "checkbox",
-        //                     name: "venueList",
-        //                     id:"venueIdList",
-        //                     value: venue.venueId // Значення чекбоксу — ID майданчика
-        //                 })
-        //             ));
-        //
-        //             row.append($("<td></td>").append(
-        //                 $("<a/>", {
-        //                     href: `/venues/${venue.venueId}`, // Посилання на майданчик
-        //                     text: venue.title,
-        //                     target: "_blank"
-        //                 })
-        //             ));
-        //
-        //             row.append($("<td></td>").text(venue.rentPrice));
-        //             row.append($("<td></td>").text(venue.maximumSeats));
-        //             row.append($("<td></td>").text(venue.cityName));
-        //
-        //             tableBody.append(row);
-        //         });
-        //     }
-        //
-        //     // Обробка події форми фільтрації
-        //     $("#filter-form").on("submit", function(event) {
-        //         event.preventDefault(); // Зупинення перезавантаження сторінки
-        //
-        //         // Збір параметрів фільтрації
-        //         const formData = {
-        //             date: $("#filterDate").val(),
-        //             city: $("#filterCity").val(),
-        //             price: $("#filterPrice").val(),
-        //             capacity: $("#filterCapacity").val()
-        //         };
-        //
-        //         // Відправлення POST-запиту для фільтрації
-        //         $.post("/filter", formData, function(response) {
-        //             // Оновлення таблиці
-        //             updateTable(response.filteredList);
-        //         });
-        //     });
-        //
-        //     // Обробка події форми надсилання заявки
-        //     $(".profile-create-form").on("submit", function(event) {
-        //         event.preventDefault(); // Зупинення перезавантаження сторінки
-        //
-        //         const venueIds = [];
-        //         $("input[name='venueList']:checked").each(function() {
-        //             venueIds.push($(this).val()); // Збір вибраних майданчиків
-        //         });
-        //         console.log("venueIds:", venueIds);
-        //         // Інші дані з форми
-        //         const newData = {
-        //             startDate: $("#startDate").val(),
-        //             startTimeHour: $("#startTimeHour").val(),
-        //             startTimeMin: $("#startTimeMin").val(),
-        //             endDate: $("#endDate").val(),
-        //             endTimeHour: $("#endTimeHour").val(),
-        //             endTimeMin: $("#endTimeMin").val(),
-        //             activityTitle: $("#activityTitle").val(),
-        //             venueIdList : venueIds // Масив вибраних майданчиків
-        //         };
-        //         console.log("formData:", newData);
-        //         // Відправлення POST-запиту
-        //         // $.post("/sendApplication", formData, function(response) {
-        //         //     // Перенаправлення після успішного надсилання заявки
-        //         //     window.location.href = "/index";
-        //         // });
-        //         $.ajax({
-        //             type: "POST", // Тип запиту
-        //             url: "/sendApplication", // Адреса запиту
-        //             data: JSON.stringify(newData), // Дані, які передаємо
-        //             success: function(response) { // Обробка у випадку успіху
-        //                 window.location.href = "/index"; // Перенаправлення після успішного надсилання
-        //             },
-        //             error: function(xhr, status, error) { // Обробка у випадку помилки
-        //                 console.error("Error sending application:", error);
-        //             }
-        //         });
-        //
-        //     });
-        // });
-
     </script>
 
 
@@ -265,12 +90,14 @@
         background-color: #f9f9f9;
         border: 1px solid #ccc;
         border-radius: 5px;
+        height: 110px;
     }
 
     .filter-input {
         margin-right: 10px;
         margin-bottom: 10px;
         width: 114px;
+        height: 30px;
         padding: 5px;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -291,6 +118,12 @@
     .button-div {
         display: flex;
         justify-content: center;
+    }
+    .button-div button{
+        width: 150px;
+        height: 40px;
+        text-align: center;
+        font-size: 15px;
     }
 </style>
 <body class="main-block-fullscreen">
@@ -327,7 +160,7 @@
                     майданчики та заповнити відповідну форму нижче</p>
                 <br>
                 <div class="filter-container">
-                    <input type="date" name="filterDate" class="filter-input" placeholder="Дата"/>
+                    <input type="date" name="filterDate" class="filter-input" placeholder="Дата" required/>
                     <select name="filterCity"  id = "filterCity" class="filter-input" placeholder="Місто"/>
                         <option  th:each="city : ${cityList}" th:value="${city.getCityName()}"
                             th:text="${city.getCityName()}"></option>
@@ -342,6 +175,7 @@
                     </div>
                 </div>
             </form>
+<!--            th:action="@{/sendApplication}"-->
             <form class="profile-create-form" autocomplete="off" th:action="@{/sendApplication}" method="post"
                   enctype="multipart/form-data">
 <!--            <form class="profile-create-form" autocomplete="off">-->
@@ -356,7 +190,7 @@
                     </tr>
                     </thead>
                     <tbody id="venueTableBody">
-                    <tr th:each="venue : ${filteredList}">
+                    <tr th:each="venue : ${venueList}">
                         <td><input type="checkbox" name="venueList" id="venueList" th:value="${venue.id}"/></td>
                         <td>
                             <a target="_blank" th:href="@{/venues/{venueId}(venueId = ${venue.getId()})}"

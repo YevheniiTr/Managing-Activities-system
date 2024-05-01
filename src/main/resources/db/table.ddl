@@ -79,11 +79,11 @@ CREATE TABLE Edge
 CREATE TABLE Profile
 (
     id           BIGSERIAL PRIMARY KEY,
-    userid   BIGSERIAL REFERENCES Users (id) NOT NULL,
-    organisation varchar(50) NOT NULL,
-    firstName    varchar(50) NOT NULL,
-    surname      varchar(50) NOT NULL,
-    phone        varchar(15) NOT NULL
+    userid       BIGSERIAL REFERENCES Users (id) NOT NULL,
+    organisation varchar(50)                     NOT NULL,
+    firstName    varchar(50)                     NOT NULL,
+    surname      varchar(50)                     NOT NULL,
+    phone        varchar(15)                     NOT NULL
 );
 CREATE TABLE userProfile
 (
@@ -102,6 +102,12 @@ CREATE TABLE BanerPage
 );
 CREATE TABLE PlannedActivities
 (
+    id         BIGSERIAL PRIMARY KEY,
+    activityId BIGSERIAL REFERENCES Activity (id) NOT NULL,
+    venueId    BIGSERIAL REFERENCES Venue (id)    NOT NULL,
+    endDate    TIMESTAMP                          NOT NULL,
+    startDate  timestamp                          NOT NULL,
+    status     varchar(15)                        NOT NULL DEFAULT 'PLANNED'
 );
 
 
@@ -223,28 +229,36 @@ FROM applicationtogetvenue;
 SELECT *
 FROM Application;
 
-CREATE OR REPLACE FUNCTION edge_insert_trigger_fnc()
-    RETURNS trigger as
-$$
-BEGIN
-    INSERT INTO "edge" (applVenueID, startDate)
-    VALUES (NEW."id", NEW."startdate");
-    RETURN NEW;
-end;
-$$
-    LANGUAGE 'plpgqsql';
-CREATE TRIGGER edge_insert_trigger
-    AFTER INSERT
-    ON "applicationtogetvenue"
-    FOR EACH ROW
-EXECUTE PROCEDURE edge_insert_trigger_fnc();
+SELECT v.*
+FROM Venue v
+         LEFT JOIN PlannedActivities pa
+                   ON pa.venueId = v.id AND date(pa.startDate) <= now() AND date(pa.endDate) >= now()
+WHERE pa.id IS NULL;
+
+SELECT v.*
+FROM Venue v
+         LEFT JOIN PlannedActivities pa
+                   ON pa.venueId = v.id AND pa.startDate::date <= CURRENT_DATE AND pa.endDate::date >= CURRENT_DATE
+WHERE pa.id IS NULL;
+
 
 SELECT *
 FROM Edge e
          JOIN venue v on e.venueID = v.id
          JOIN applicationtogetvenue appl on e.applVenueID = appl.id
-         JOIN activity a on  appl.activityID = a.id
+         JOIN activity a on appl.activityID = a.id
 WHERE isMatching = true;
 -- получить заявки по дате и для всех залов пользователя (теоретически)
 SELECT DISTINCT applVenueID
 FROM edge;
+
+SELECT e.* FROM applicationtogetvenue a
+JOIN Edge e on a.id = e.applvenueid
+JOIN Venue v on e.venueid  = v.id
+WHERE v.userid =25;
+
+SELECT v.* FROM applicationtogetvenue a
+                    JOIN Edge e on a.id = e.applvenueid
+                    JOIN Venue v on e.venueid  = v.id
+WHERE v.userid =25;
+

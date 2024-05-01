@@ -33,6 +33,8 @@ public class Venue extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "venue")
     //@JsonManagedReference
     List <Edge> edgeList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "venue")
+    List<PlannedActivities> plannedActivitiesList;
 
     public Venue(Long id) {
         super(id);

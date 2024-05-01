@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,8 +125,13 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<VenueDTO> findAllFreeVenuesForCurrentDate() {
-        return null;
+    public List<Venue> findAllFreeVenuesForCurrentDate() {
+        return venueRepository.findAllFreeVenuesForCurrentDate();
+    }
+
+    @Override
+    public List<Venue> findAllFreeVenuesForDate(Timestamp date) {
+        return venueRepository.findAllFreeVenuesForDate(date);
     }
 
     @Override

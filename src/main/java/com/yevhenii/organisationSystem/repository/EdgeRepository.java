@@ -21,6 +21,9 @@ public interface EdgeRepository extends JpaRepository<Edge,Long> {
     @Query("select  e from Edge e where e.id =:id")
     Optional<Edge> findById(Long id);
 
+    @Query("select e from Edge e where e.applicationToGetVenue.id = :applicationId")
+    List<Edge> findByApplicationId(Long applicationId);
+
     //void updateEdge(Edge edge)
 
 }

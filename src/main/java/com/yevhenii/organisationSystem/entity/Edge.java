@@ -19,8 +19,6 @@ public class Edge extends BaseEntity {
     private boolean isMatching;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venueid")
-    //@JsonBackReference
-
     Venue venue;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applvenueid")

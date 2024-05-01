@@ -32,7 +32,8 @@ public class Activity extends BaseEntity {
     User user;
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     List<ApplicationToGetVenue> applicationToGetVenueList;
-
+    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    List<PlannedActivities> plannedActivitiesList;
 
     public Activity(Long id) {
         super(id);

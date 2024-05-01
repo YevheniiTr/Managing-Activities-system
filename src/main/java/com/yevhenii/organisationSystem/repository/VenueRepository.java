@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,16 @@ public interface VenueRepository extends JpaRepository<Venue, Long> {
     @Query("select v from  Venue v where v.user.id =:userId")
     List<Venue> findAllById(Long userId);
     Optional<Venue> findById(Long venueId);
-    @Query("select v from Venue v ")
+
+    @Query(value = "SELECT v.* FROM Venue v LEFT JOIN PlannedActivities pa ON pa.venueId = v.id AND date(pa.startDate) <= now()   AND date(pa.endDate)  >= now()     WHERE pa.id IS NULL",nativeQuery = true)
     List<Venue> findAllFreeVenuesForCurrentDate();
+    @Query(value = "SELECT v.*\n" +
+            "FROM Venue v\n" +
+            "LEFT JOIN PlannedActivities pa\n" +
+            "  ON pa.venueId = v.id\n" +
+            "  AND pa.startDate <= :date \n" +
+            "  AND pa.endDate >= :date   \n" +
+            "WHERE pa.id IS NULL;",nativeQuery = true)
+    List<Venue> findAllFreeVenuesForDate(Timestamp date);
+
 }

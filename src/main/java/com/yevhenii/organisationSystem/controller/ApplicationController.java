@@ -4,6 +4,7 @@ import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.ActivityDTO;
 import com.yevhenii.organisationSystem.dto.SaveApplicationDTO;
 import com.yevhenii.organisationSystem.dto.VenueDTO;
+import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.City;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.repository.CityRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,14 +52,35 @@ public class ApplicationController {
 
         List<ActivityDTO> activityDTOList = activityService.findAllByUserId(securityUtils.getUserId());
         model.addAttribute("activityList", activityDTOList);
-//        List<VenueDTO> freeVenueList = venueService.findAllFreeVenuesForCurrentDate();
-//        model.addAttribute("freeVenues", freeVenueList);
-        List<Venue> venueList = venueService.findAll();
-        model.addAttribute("venueList", venueList);
+
+        if (model.containsAttribute("filteredList")) {
+            model.addAttribute("venueList", model.getAttribute("filteredList"));
+        } else {
+            //List<Venue> venueList = venueService.findAll();
+            List<Venue> freeVenueList = venueService.findAllFreeVenuesForCurrentDate();
+            model.addAttribute("venueList", freeVenueList);
+        }
         List<City> cityList = cityService.findAll();
         model.addAttribute("cityList",cityList);
         return "sendApplicationForm";
     }
+    @GetMapping("/applications/my")
+    public String getUserApplications(Model model){
+        model.addAttribute("orgApplications",applicationService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+        model.addAttribute("ownerEdges",applicationService.findAllForOwner(securityUtils.getUserId()));
+        System.out.println(applicationService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+
+        return "userApplications";
+    }
+
+    @PostMapping("/applications/my")
+    public RedirectView getUserApplicationsOnRole(@RequestParam String role,Model model,RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("role", role);
+        return  new RedirectView("/applications/my");
+    }
+
+
+
 
 
     @PostMapping("/application/create")
@@ -71,8 +94,7 @@ public class ApplicationController {
         }
     }
 
-    //    @RequestParam List<String> venueList
-    //@RequestParam List<Long> venueIds
+
     @PostMapping("/sendApplication")
     public RedirectView sendApplication(@RequestParam String startDate,
                                         @RequestParam String startTimeHour,
@@ -87,11 +109,8 @@ public class ApplicationController {
         String endTime = endTimeHour + ":" + endTimeMin;
         SaveApplicationDTO saveApplication = new SaveApplicationDTO(startDate, startTime, endDate, endTime, activityTitle);
         if (activityService.isActivityBelongToUserByTitle(securityUtils.getUserId(), saveApplication.getActivityTitle())) {
-            applicationService.save(saveApplication);
-            //applicationService.sendApplication(saveApplication, venueList);
-            //applicationService.sendApplication2(saveApplication, venueIds);
-
-            //System.out.println(Arrays.toString(venueIdList));
+            //applicationService.save(saveApplication);
+            applicationService.sendApplication(saveApplication, venueList);
             return new RedirectView("/index");
         } else {
             throw new AccessDeniedException("Application does not exist or user dont have access on it");
@@ -111,27 +130,34 @@ public class ApplicationController {
     }
     @PostMapping("/filter")
     public RedirectView filterVenues(
-            @RequestParam(required = false) String filterDate,
+            @RequestParam(required = true) String filterDate,
             @RequestParam(required = false) String filterCity,
             @RequestParam(required = false) Double filterPrice,
             @RequestParam(required = false) Integer filterCapacity,
-            Model model,
             RedirectAttributes redirectAttributes) {
-        // Отримуємо всі майданчики
-        List<Venue> allVenues = venueService.findAll();
-        System.out.println(filterCity + filterPrice + filterCapacity);
-        // Фільтруємо за параметрами, якщо вони вказані
-        List<Venue> filteredList = allVenues.stream()
-                //.filter(venue -> (date == null || venue.ge.equals(date)))
+        List<Venue> listForFilter;
+        System.out.println(filterDate);
+        if(filterDate != null){
+            Timestamp date = Timestamp.valueOf(filterDate +" " + "00:00:00");
+            listForFilter = venueService.findAllFreeVenuesForDate(date);
+
+        }
+        else{
+            listForFilter = venueService.findAllFreeVenuesForCurrentDate();
+        }
+        List<Venue> filteredList = listForFilter.stream()
                 .filter(venue -> (filterCity == null || venue.getStreet().getCity().getCityName().equalsIgnoreCase(filterCity)))
                 .filter(venue -> (filterPrice == null || venue.getRentPrice() >= filterPrice))
                 .filter(venue -> (filterCapacity == null || venue.getMaximumSeats() >= filterCapacity))
                 .collect(Collectors.toList());
-        System.out.println(filteredList);
         redirectAttributes.addFlashAttribute("filteredList", filteredList);
-        // Повертаємо відфільтрований список у форматі JSON
-        //return "sendApplicationForm";
         return  new RedirectView("/sendApplicationForm");
+    }
+
+    @GetMapping("/applications/delete/{applicationId}")
+    public RedirectView deleteVenue(@PathVariable Long applicationId) {
+        applicationService.delete(applicationId);
+        return new RedirectView("/applications/my");
     }
 
 
