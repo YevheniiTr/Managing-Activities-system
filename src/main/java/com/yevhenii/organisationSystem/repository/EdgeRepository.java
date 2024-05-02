@@ -19,6 +19,12 @@ public interface EdgeRepository extends JpaRepository<Edge,Long> {
 
     @Query("select  e  from Edge e where e.date = :date and e.venue.user.id =:userId")
     List<Edge>  getApplicationForVenues(Timestamp date, long userId);
+
+    @Query("select  e  from Edge e where DATE(e.date) = :date and e.venue.user.id =:userId")
+    List<Edge>  getApplicationForVenuesForDay(LocalDate date, long userId);
+
+
+
     @Query("select  e  from Edge e where e.date = :date and e.venue.user.id =:userId and e.isMatching = true")
     List<Edge>  getMatchingEdges(long userId,Timestamp date);
 

@@ -119,7 +119,8 @@
         display: flex;
         justify-content: center;
     }
-    .button-div button{
+
+    .button-div button {
         width: 150px;
         height: 40px;
         text-align: center;
@@ -161,24 +162,24 @@
                 <br>
                 <div class="filter-container">
                     <input type="date" name="filterDate" class="filter-input" placeholder="Дата" required/>
-                    <select name="filterCity"  id = "filterCity" class="filter-input" placeholder="Місто"/>
-                        <option  th:each="city : ${cityList}" th:value="${city.getCityName()}"
+                    <select name="filterCity" id="filterCity" class="filter-input" placeholder="Місто">
+                    <option value="" selected disabled>Місто</option>
+                    <option th:each="city : ${cityList}" th:value="${city.getCityName()}"
                             th:text="${city.getCityName()}"></option>
                     </select>
                     <input type="number" name="filterPrice" class="filter-input" placeholder="Ціна" min="0"/>
                     <input type="number" name="filterCapacity" class="filter-input" placeholder="Вмістимість" min="0"/>
 
 
-
                     <div class="button-div">
-                        <button  class="filter-button2">Застосувати фільтри</button>
+                        <button class="filter-button2">Застосувати фільтри</button>
                     </div>
                 </div>
             </form>
-<!--            th:action="@{/sendApplication}"-->
+            <!--            th:action="@{/sendApplication}"-->
             <form class="profile-create-form" autocomplete="off" th:action="@{/sendApplication}" method="post"
                   enctype="multipart/form-data">
-<!--            <form class="profile-create-form" autocomplete="off">-->
+                <!--            <form class="profile-create-form" autocomplete="off">-->
                 <table class="venue-table">
                     <thead>
                     <tr>

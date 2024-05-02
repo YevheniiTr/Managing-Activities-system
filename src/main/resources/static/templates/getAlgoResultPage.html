@@ -110,34 +110,12 @@
 
 <div class="main-block">
     <div class="content-block main-content-block">
-        <h1 class="profile-create-block-h1">Заявки</h1>
+        <h1 class="profile-create-block-h1">Результат розподілу заявок</h1>
         <br>
         <div class="scrollable-block">
 
             <div class="profile-my-form">
 
-                <form id="first-form" th:action="@{/ownerFilter}" method="post">
-                    <br>
-
-
-                    <div class="filter-container">
-                        <div style="justify-content : space-between">
-
-                            <input id ="sharedDateInput" style="height: 38px" type="date" name="filterDate" class="filter-input"
-                                   placeholder="Дата" required/>
-
-                            <select name="filterVenue" id="filterVenue" class="filter-input" placeholder="Майданчик">
-                                <option value="">Усі Майданчики</option>
-                                <option th:each="venue : ${venueList}" th:value="${venue.getTitle()}"
-                                        th:text="${venue.getTitle()}" required></option>
-                            </select>
-                        </div>
-
-                        <div class="button-div">
-                            <button class="filter-button2">Застосувати фільтри</button>
-                        </div>
-                    </div>
-                </form>
                 <table class="venue-table">
                     <thead>
                     <tr>
@@ -151,7 +129,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="edge, status : ${ownerEdges}">
+                    <tr th:each="edge, status : ${resultList}">
                         <td th:text="${status.index + 1}"></td>
                         <td>
                             <a th:if="${edge.getApplicationToGetVenue() != null && edge.getApplicationToGetVenue().getActivity() != null}"
@@ -172,11 +150,11 @@
                         <td>
                             <div class="button-group">
                                 <a th:if="${edge.getStatus().name() != 'APPROVED'}"
-                                   th:href="'/venueHolderApplications/approve/' + ${edge.getId()}">
+                                   th:href="'/algoApplications/approve/' + ${edge.getId()}">
                                     <img src="/img/check-mark.png" class="delete-img" alt="Edit"/>
                                 </a>
                                 <a th:if="${edge.getStatus().name() != 'DECLINED'}"
-                                   th:href="'/venueHolderApplications/decline/' + ${edge.getId()}">
+                                   th:href="'/algoApplications/decline/' + ${edge.getId()}">
                                     <img src="/img/delete-button.png" class="delete-img" alt="decline"/>
                                 </a>
                             </div>
@@ -184,21 +162,12 @@
                     </tr>
                     </tbody>
                 </table>
-                <form id="second-form" class="button-div" th:action="@{/manageVenues}" method="post">
-                    <input type="hidden" name="date" id="secondFormHiddenDate"/>
-                    <button class="standart-button">Розподілити майданчики</button>
-                </form>
             </div>
         </div>
     </div>
 </div>
 <script>
-    document.getElementById('sharedDateInput').addEventListener('change', function () {
-        // Get the value from the shared input
-        const sharedDate = this.value;
-        // Update hidden fields in both forms
-        document.getElementById('secondFormHiddenDate').value = sharedDate;
-    });
+
 </script>
 
 </body>

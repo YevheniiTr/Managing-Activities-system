@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,24 @@ public class KunAlgorithmImpl implements KunAlgorithmService {
     @Override
     public List<Edge> getApplicationForVenues(Timestamp date, long userId) {
         return edgeRepository.getApplicationForVenues(date, userId);
+    }
+
+    @Override
+    public List<Edge> getEdgesForVenues(LocalDate date, long userId) {
+        return edgeRepository.getApplicationForVenuesForDay(date, userId);
+    }
+
+    @Override
+    public List<Edge> getKuhnResultList(List<Edge> edgeList) {
+        graph = new Graph(edgeList);
+        graph.maximumBipartiteMatching();
+        graph.createResultEdgeList();
+        graph.changeResultListStatus();
+        saveMatching(graph.getResultMatchingEdgeList());
+        graph.displayAdjMatrix();
+        int[] resultMatching = graph.maximumBipartiteMatching();
+        System.out.println(Arrays.toString(resultMatching));
+        return graph.getResultMatchingEdgeList();
     }
 
 
@@ -90,6 +109,8 @@ public class KunAlgorithmImpl implements KunAlgorithmService {
         }
         return responseList;
     }
+
+
 
 
 }

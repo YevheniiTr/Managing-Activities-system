@@ -16,6 +16,7 @@ public class Graph {
     List<Edge> edgeList;
     int[] matching;
     Map<Venue, ApplicationToGetVenue> resultMatching;
+    List<Edge> resultMatchingEdgeList;
 
     // кол-во строк =  кол-во заявок, каждая строка = заявка
     // кол-во столбцов = кол-во залов, номер столбца -> номер зала +1
@@ -35,6 +36,7 @@ public class Graph {
         // Extract the distinct applications and venues from the edgeList
         this.applicationList = new ArrayList<>();
         this.venueList = new ArrayList<>();
+        this.resultMatchingEdgeList = new ArrayList<>();
         for (Edge edge : edgeList) {
             if (!applicationList.contains(edge.getApplicationToGetVenue())) {
                 applicationList.add(edge.getApplicationToGetVenue());
@@ -58,12 +60,6 @@ public class Graph {
             adjMatrix[applicationIndex][venueIndex] = 1;
         }
     }
-
-    public void addEdge(int activity, int venue) {
-        adjMatrix[activity][venue] = 1;
-    }
-
-
 
 
     private boolean dfs(int application, boolean[] visited) {
@@ -97,13 +93,24 @@ public class Graph {
 
     }
 
-    public void createMap2() {
-        for (int i = 0; i < matching.length; i++) {
-            if (matching[i] != -1) {
-                resultMatching.put(venueList.get(i), applicationList.get(matching[i]));
+    public void createResultEdgeList() {
+        for(Edge e: edgeList) {
+            for (int i = 0; i < matching.length; i++) {
+                if (matching[i] != -1 && e.getApplicationToGetVenue().equals(applicationList.get(matching[i])) &&  e.getVenue().equals(venueList.get(i))) {
+                    resultMatchingEdgeList.add(e);
+                }
             }
         }
+
     }
+
+    public void changeResultListStatus() {
+        for (Edge edge : resultMatchingEdgeList) {
+            edge.setMatching(true);
+        }
+    }
+
+
 
 
     public void changeStatus() {

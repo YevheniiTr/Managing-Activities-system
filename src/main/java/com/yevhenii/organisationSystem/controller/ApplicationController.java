@@ -3,33 +3,22 @@ package com.yevhenii.organisationSystem.controller;
 import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.ActivityDTO;
 import com.yevhenii.organisationSystem.dto.SaveApplicationDTO;
-import com.yevhenii.organisationSystem.dto.VenueDTO;
-import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.City;
-import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
-import com.yevhenii.organisationSystem.repository.CityRepository;
 import com.yevhenii.organisationSystem.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
+
+import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 
 @Controller
@@ -50,6 +39,28 @@ public class ApplicationController {
         this.venueService = venueService;
         this.cityService = cityService;
         this.edgeService = edgeService;
+    }
+    private HttpSession getSession() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        return attr.getRequest().getSession(true);
+    }
+
+    @GetMapping("/getAlgoResultPage")
+    public String getResultPage(Model model){
+        HttpSession session = getSession();
+        Object resultAlgorithm = session.getAttribute("resultAlgorithm");
+        if (resultAlgorithm != null) {
+            model.addAttribute("resultList", resultAlgorithm);
+        } else {
+            System.out.println("NO FILTER");
+        }
+//        if (model.containsAttribute("resultAlgorithm")) {
+//            System.out.println("FILTER");
+//            List<Edge> resultList = (List<Edge>) model.getAttribute("resultAlgorithm");
+//            model.addAttribute("resultList", resultList);
+//        }
+//        else System.out.println("NO FILTER");
+        return "getAlgoResultPage";
     }
 
     @GetMapping("/sendApplicationForm")
@@ -75,7 +86,8 @@ public class ApplicationController {
         model.addAttribute("venueList", venueService.findAllById(securityUtils.getUserId()));
         if (model.containsAttribute("filteredOwnerList")) {
             model.addAttribute("ownerEdges", model.getAttribute("filteredOwnerList"));
-        } else {
+        }else {
+            System.out.println("NO FILTER");
             model.addAttribute("ownerEdges", applicationService.findAllForOwner(securityUtils.getUserId()));
         }
         return "ownerApplications";
@@ -136,82 +148,9 @@ public class ApplicationController {
     @GetMapping({"/venueHolderApplications/approve/{id}"})
     public RedirectView approve(@PathVariable Long id) {
         applicationService.approve(id);
+
         return new RedirectView("/getOwnerApplications");
     }
-
-//    @PostMapping("/filter")
-//    public RedirectView filterVenues(
-//            @RequestParam(required = true) String filterDate,
-//            @RequestParam(required = false) String filterCity,
-//            @RequestParam(required = false) Double filterPrice,
-//            @RequestParam(required = false) Integer filterCapacity,
-//            RedirectAttributes redirectAttributes) {
-//        List<Venue> listForFilter;
-//        System.out.println(filterDate);
-//        if (filterDate != null) {
-//            Timestamp date = Timestamp.valueOf(filterDate + " " + "00:00:00");
-//            listForFilter = venueService.findAllFreeVenuesForDate(date);
-//
-//        } else {
-//            listForFilter = venueService.findAllFreeVenuesForCurrentDate();
-//        }
-//        List<Venue> filteredList = listForFilter.stream()
-//                .filter(venue -> (filterCity == null || venue.getStreet().getCity().getCityName().equalsIgnoreCase(filterCity)))
-//                .filter(venue -> (filterPrice == null || venue.getRentPrice() >= filterPrice))
-//                .filter(venue -> (filterCapacity == null || venue.getMaximumSeats() >= filterCapacity))
-//                .collect(Collectors.toList());
-//        redirectAttributes.addFlashAttribute("filteredList", filteredList);
-//        return new RedirectView("/sendApplicationForm");
-//    }
-//
-//    @PostMapping("/ownerFilter")
-//    public RedirectView filterEdgesForVenues(
-//            @RequestParam(required = true) String filterDate,
-//            @RequestParam String filterVenue,
-//            RedirectAttributes redirectAttributes) {
-//        List<Edge> listForFilter;
-//        System.out.println(filterDate);
-//
-//        //Timestamp date = Timestamp.valueOf(filterDate +" " + "00:00:00");
-//        LocalDate localDate = LocalDate.parse(filterDate);
-//        System.out.println(localDate);
-//        listForFilter = edgeService.findUserEdgesForDate(localDate, securityUtils.getUserId());
-//        System.out.println(listForFilter);
-//
-////        else{
-////            listForFilter = applicationService.findAllForOwner(securityUtils.getUserId());
-////        }
-//        List<Edge> filteredList = listForFilter.stream()
-//                .filter(edge -> (filterVenue == null || edge.getVenue().getTitle().equalsIgnoreCase(filterVenue)))
-//                .collect(Collectors.toList());
-//        System.out.println(filteredList);
-//        redirectAttributes.addFlashAttribute("filteredOwnerList", filteredList);
-//        return new RedirectView("/getOwnerApplications");
-//    }
-//
-//    @PostMapping("/organisatorFilter")
-//    public RedirectView filterEdgesForApplication(
-//            @RequestParam(required = true) String filterDate,
-//            @RequestParam String filterActivity,
-//            RedirectAttributes redirectAttributes) {
-//        List<Edge> listForFilter;
-//        System.out.println(filterDate);
-//        LocalDate localDate = LocalDate.parse(filterDate);
-//        System.out.println(localDate);
-//        listForFilter = edgeService.findEdgesByOrganisatorAndDate(localDate, securityUtils.getUserId());
-//        System.out.println(listForFilter);
-//        List<Edge> filteredList = listForFilter.stream()
-//                .filter(edge -> (filterActivity == null || edge.getApplicationToGetVenue().getActivity().getTitle().equalsIgnoreCase(filterActivity)))
-//                .collect(Collectors.toList());
-//        System.out.println(filteredList);
-//        redirectAttributes.addFlashAttribute("filteredOrganisatorList", filteredList);
-//        return new RedirectView("/getOrganisatorApplication");
-//    }
-
-
-
-
-
 
 
     @GetMapping("/applications/delete/{edgeId}")

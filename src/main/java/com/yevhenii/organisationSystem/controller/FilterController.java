@@ -63,7 +63,7 @@ public class FilterController {
     @PostMapping("/ownerFilter")
     public RedirectView filterEdgesForVenues(
             @RequestParam(required = true) String filterDate,
-            @RequestParam String filterVenue,
+            @RequestParam(required = false) String filterVenue,
             RedirectAttributes redirectAttributes) {
         List<Edge> listForFilter;
         System.out.println(filterDate);
@@ -74,13 +74,14 @@ public class FilterController {
         listForFilter = edgeService.findUserEdgesForDate(localDate, securityUtils.getUserId());
         System.out.println(listForFilter);
 
-//        else{
-//            listForFilter = applicationService.findAllForOwner(securityUtils.getUserId());
-//        }
-        List<Edge> filteredList = listForFilter.stream()
-                .filter(edge -> (filterVenue == null || edge.getVenue().getTitle().equalsIgnoreCase(filterVenue)))
-                .collect(Collectors.toList());
-        System.out.println(filteredList);
+
+        List<Edge> filteredList;
+        if(!filterVenue.equals("")){
+             filteredList = listForFilter.stream()
+                    .filter(edge -> (filterVenue == null || edge.getVenue().getTitle().equalsIgnoreCase(filterVenue)))
+                    .collect(Collectors.toList());
+        }
+        else filteredList = listForFilter;
         redirectAttributes.addFlashAttribute("filteredOwnerList", filteredList);
         return new RedirectView("/getOwnerApplications");
     }
