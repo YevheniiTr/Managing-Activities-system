@@ -25,7 +25,7 @@ public class ApplicationToGetVenue extends BaseEntity {
     private Timestamp startDate;
     @Column(name = "enddate")
     private Timestamp endDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
             @JoinColumn(name = "activityID")
     Activity activity;
     @OneToMany(mappedBy = "applicationToGetVenue",fetch = FetchType.LAZY)

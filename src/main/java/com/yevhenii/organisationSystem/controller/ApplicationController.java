@@ -9,10 +9,7 @@ import com.yevhenii.organisationSystem.entity.City;
 import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.repository.CityRepository;
-import com.yevhenii.organisationSystem.services.ActivityService;
-import com.yevhenii.organisationSystem.services.ApplicationService;
-import com.yevhenii.organisationSystem.services.CityService;
-import com.yevhenii.organisationSystem.services.VenueService;
+import com.yevhenii.organisationSystem.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,14 +40,16 @@ public class ApplicationController {
     SecurityUtils securityUtils;
     VenueService venueService;
     CityService cityService;
+    EdgeService edgeService;
 
     @Autowired
-    public ApplicationController(CityService cityService,VenueService venueService, SecurityUtils securityUtils, ApplicationService applicationService, ActivityService activityService) {
+    public ApplicationController(EdgeService edgeService, CityService cityService, VenueService venueService, SecurityUtils securityUtils, ApplicationService applicationService, ActivityService activityService) {
         this.applicationService = applicationService;
         this.activityService = activityService;
         this.securityUtils = securityUtils;
         this.venueService = venueService;
         this.cityService = cityService;
+        this.edgeService = edgeService;
     }
 
     @GetMapping("/sendApplicationForm")
@@ -65,27 +65,34 @@ public class ApplicationController {
             model.addAttribute("venueList", freeVenueList);
         }
         List<City> cityList = cityService.findAll();
-        model.addAttribute("cityList",cityList);
+        model.addAttribute("cityList", cityList);
         return "sendApplicationForm";
     }
-    @GetMapping("/applications/my")
-    public String getUserApplications(Model model){
-        model.addAttribute("orgApplications",applicationService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
-        model.addAttribute("ownerEdges",applicationService.findAllForOwner(securityUtils.getUserId()));
-        System.out.println(applicationService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
 
-        return "userApplications";
+    @GetMapping("/getOwnerApplications")
+    public String getOwnerApplications(Model model) {
+        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
+        model.addAttribute("venueList", venueService.findAllById(securityUtils.getUserId()));
+        if (model.containsAttribute("filteredOwnerList")) {
+            model.addAttribute("ownerEdges", model.getAttribute("filteredOwnerList"));
+        } else {
+            model.addAttribute("ownerEdges", applicationService.findAllForOwner(securityUtils.getUserId()));
+        }
+        return "ownerApplications";
     }
 
-    @PostMapping("/applications/my")
-    public RedirectView getUserApplicationsOnRole(@RequestParam String role,Model model,RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("role", role);
-        return  new RedirectView("/applications/my");
+    @GetMapping("/getOrganisatorApplication")
+    public String getOrganisatorApplications(Model model) {
+        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
+        model.addAttribute("activityList", activityService.findAllByUserId(securityUtils.getUserId()));
+        model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+        if (model.containsAttribute("filteredOrganisatorList")) {
+            model.addAttribute("orgApplications", model.getAttribute("filteredOrganisatorList"));
+        } else {
+            model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+        }
+        return "organisatorApplications";
     }
-
-
-
-
 
     @PostMapping("/application/create")
     public RedirectView createApplication(@RequestBody SaveApplicationDTO saveApplication) {
@@ -108,7 +115,7 @@ public class ApplicationController {
                                         @RequestParam String endTimeMin,
                                         @RequestParam String activityTitle,
                                         @RequestParam List<Venue> venueList
-                                        ) {
+    ) {
         String startTime = startTimeHour + ":" + startTimeMin;
         String endTime = endTimeHour + ":" + endTimeMin;
         SaveApplicationDTO saveApplication = new SaveApplicationDTO(startDate, startTime, endDate, endTime, activityTitle);
@@ -123,66 +130,95 @@ public class ApplicationController {
     @GetMapping({"/venueHolderApplications/decline/{id}"})
     public RedirectView decline(@PathVariable Long id) {
         applicationService.decline(id);
-        return new RedirectView("/applications/my");
+        return new RedirectView("/getOwnerApplications");
     }
 
     @GetMapping({"/venueHolderApplications/approve/{id}"})
     public RedirectView approve(@PathVariable Long id) {
         applicationService.approve(id);
-        return new RedirectView("/applications/my");
-    }
-    @PostMapping("/filter")
-    public RedirectView filterVenues(
-            @RequestParam(required = true) String filterDate,
-            @RequestParam(required = false) String filterCity,
-            @RequestParam(required = false) Double filterPrice,
-            @RequestParam(required = false) Integer filterCapacity,
-            RedirectAttributes redirectAttributes) {
-        List<Venue> listForFilter;
-        System.out.println(filterDate);
-        if(filterDate != null){
-            Timestamp date = Timestamp.valueOf(filterDate +" " + "00:00:00");
-            listForFilter = venueService.findAllFreeVenuesForDate(date);
-
-        }
-        else{
-            listForFilter = venueService.findAllFreeVenuesForCurrentDate();
-        }
-        List<Venue> filteredList = listForFilter.stream()
-                .filter(venue -> (filterCity == null || venue.getStreet().getCity().getCityName().equalsIgnoreCase(filterCity)))
-                .filter(venue -> (filterPrice == null || venue.getRentPrice() >= filterPrice))
-                .filter(venue -> (filterCapacity == null || venue.getMaximumSeats() >= filterCapacity))
-                .collect(Collectors.toList());
-        redirectAttributes.addFlashAttribute("filteredList", filteredList);
-        return  new RedirectView("/sendApplicationForm");
+        return new RedirectView("/getOwnerApplications");
     }
 
-    @GetMapping("/applications/delete/{applicationId}")
-    public RedirectView deleteVenue(@PathVariable Long applicationId) {
-        applicationService.delete(applicationId);
-        return new RedirectView("/applications/my");
-    }
-//    @GetMapping("applications/owner")
-//    public String listBooks(
-//            Model model,
-//            @RequestParam("page") Optional<Integer> page
-//           ) {
-//        int currentPage = page.orElse(1);
-//        int pageSize = 10;
-//        List<Edge> list = applicationService.findAllForOwner(securityUtils.getUserId());
-//        Page<Edge> edgePage = applicationService.findPaginated(PageRequest.of(currentPage - 1, pageSize),list);
+//    @PostMapping("/filter")
+//    public RedirectView filterVenues(
+//            @RequestParam(required = true) String filterDate,
+//            @RequestParam(required = false) String filterCity,
+//            @RequestParam(required = false) Double filterPrice,
+//            @RequestParam(required = false) Integer filterCapacity,
+//            RedirectAttributes redirectAttributes) {
+//        List<Venue> listForFilter;
+//        System.out.println(filterDate);
+//        if (filterDate != null) {
+//            Timestamp date = Timestamp.valueOf(filterDate + " " + "00:00:00");
+//            listForFilter = venueService.findAllFreeVenuesForDate(date);
 //
-//        model.addAttribute("ownerEdges", edgePage);
-//
-//        int totalPages = edgePage.getTotalPages();
-//        if (totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
+//        } else {
+//            listForFilter = venueService.findAllFreeVenuesForCurrentDate();
 //        }
-//
-//        return "userApplications";
+//        List<Venue> filteredList = listForFilter.stream()
+//                .filter(venue -> (filterCity == null || venue.getStreet().getCity().getCityName().equalsIgnoreCase(filterCity)))
+//                .filter(venue -> (filterPrice == null || venue.getRentPrice() >= filterPrice))
+//                .filter(venue -> (filterCapacity == null || venue.getMaximumSeats() >= filterCapacity))
+//                .collect(Collectors.toList());
+//        redirectAttributes.addFlashAttribute("filteredList", filteredList);
+//        return new RedirectView("/sendApplicationForm");
 //    }
+//
+//    @PostMapping("/ownerFilter")
+//    public RedirectView filterEdgesForVenues(
+//            @RequestParam(required = true) String filterDate,
+//            @RequestParam String filterVenue,
+//            RedirectAttributes redirectAttributes) {
+//        List<Edge> listForFilter;
+//        System.out.println(filterDate);
+//
+//        //Timestamp date = Timestamp.valueOf(filterDate +" " + "00:00:00");
+//        LocalDate localDate = LocalDate.parse(filterDate);
+//        System.out.println(localDate);
+//        listForFilter = edgeService.findUserEdgesForDate(localDate, securityUtils.getUserId());
+//        System.out.println(listForFilter);
+//
+////        else{
+////            listForFilter = applicationService.findAllForOwner(securityUtils.getUserId());
+////        }
+//        List<Edge> filteredList = listForFilter.stream()
+//                .filter(edge -> (filterVenue == null || edge.getVenue().getTitle().equalsIgnoreCase(filterVenue)))
+//                .collect(Collectors.toList());
+//        System.out.println(filteredList);
+//        redirectAttributes.addFlashAttribute("filteredOwnerList", filteredList);
+//        return new RedirectView("/getOwnerApplications");
+//    }
+//
+//    @PostMapping("/organisatorFilter")
+//    public RedirectView filterEdgesForApplication(
+//            @RequestParam(required = true) String filterDate,
+//            @RequestParam String filterActivity,
+//            RedirectAttributes redirectAttributes) {
+//        List<Edge> listForFilter;
+//        System.out.println(filterDate);
+//        LocalDate localDate = LocalDate.parse(filterDate);
+//        System.out.println(localDate);
+//        listForFilter = edgeService.findEdgesByOrganisatorAndDate(localDate, securityUtils.getUserId());
+//        System.out.println(listForFilter);
+//        List<Edge> filteredList = listForFilter.stream()
+//                .filter(edge -> (filterActivity == null || edge.getApplicationToGetVenue().getActivity().getTitle().equalsIgnoreCase(filterActivity)))
+//                .collect(Collectors.toList());
+//        System.out.println(filteredList);
+//        redirectAttributes.addFlashAttribute("filteredOrganisatorList", filteredList);
+//        return new RedirectView("/getOrganisatorApplication");
+//    }
+
+
+
+
+
+
+
+    @GetMapping("/applications/delete/{edgeId}")
+    public RedirectView deleteVenue(@PathVariable Long edgeId) {
+        applicationService.delete(edgeId);
+        return new RedirectView("/getOrganisatorApplication");
+    }
+
 
 }

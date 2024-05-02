@@ -16,7 +16,7 @@ public interface ApplicationService {
 
     boolean isApplicationBelongToUser(Long userId, Long applicationId);
 
-    void delete(Long activityId);
+    void delete(Long edgeId);
 
     void sendApplication(SaveApplicationDTO saveApplicationDTO, List<Venue> venueTitleList);
 

@@ -1,6 +1,8 @@
 package com.yevhenii.organisationSystem.entity;
 
 import javax.persistence.*;
+
+import com.yevhenii.organisationSystem.entity.enums.EApplicationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,10 +19,14 @@ public class Edge extends BaseEntity {
     private Timestamp date;
     @Column(name = "ismatching")
     private boolean isMatching;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EApplicationStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venueid")
     Venue venue;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "applvenueid")
     //@JsonBackReference
     ApplicationToGetVenue applicationToGetVenue;

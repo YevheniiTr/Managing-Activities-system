@@ -58,9 +58,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void delete(Long applicationId) {
-        edgeRepository.deleteAll(edgeRepository.findByApplicationId(applicationId));
-        applicationRepository.deleteById(applicationId);
+    public void delete(Long edgeId) {
+        Optional<Edge> edge = edgeRepository.findById(edgeId);
+        ApplicationToGetVenue applicationToGetVenue = edge.get().getApplicationToGetVenue();
+        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityId(applicationToGetVenue.getActivity().getId());
+        if(plannedActivities.isPresent()) plannedActivityRepository.delete(plannedActivities.get());
+        edgeRepository.delete(edge.get());
     }
 
     @Override
@@ -78,6 +81,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             edge.setVenue(venue);
             edge.setApplicationToGetVenue(application);
             edge.setDate(application.getStartDate());
+            edge.setStatus(EApplicationStatus.EXPECT);
             edgeRepository.save(edge);
         }
     }
@@ -86,15 +90,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void approve(Long edgeId) {
         Optional<Edge> edgeOptional = edgeRepository.findById(edgeId);
         Edge edge1 = edgeOptional.get();
+        edge1.setStatus(EApplicationStatus.APPROVED);
         ApplicationToGetVenue applicationToGetVenue = edge1.getApplicationToGetVenue();
-        applicationToGetVenue.setStatus(EApplicationStatus.APPROVED);
+        //applicationToGetVenue.setStatus(EApplicationStatus.APPROVED);
         PlannedActivities plannedActivities = new PlannedActivities();
         plannedActivities.setActivity(applicationToGetVenue.getActivity());
         plannedActivities.setVenue(edge1.getVenue());
         plannedActivities.setStatus("PLANED");
         plannedActivities.setStartDate(edge1.getDate());
         plannedActivities.setEndDate(applicationToGetVenue.getEndDate());
-        applicationRepository.save(applicationToGetVenue);
+        edgeRepository.save(edge1);
         plannedActivityRepository.save(plannedActivities);
     }
 
@@ -105,8 +110,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         ApplicationToGetVenue applicationToGetVenue = edge1.getApplicationToGetVenue();
         Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityId(applicationToGetVenue.getActivity().getId());
         if(plannedActivities.isPresent()) plannedActivityRepository.delete(plannedActivities.get());
-        applicationToGetVenue.setStatus(EApplicationStatus.DECLINED);
-        applicationRepository.save(applicationToGetVenue);
+        edge1.setStatus(EApplicationStatus.DECLINED);
+        edgeRepository.save(edge1);
     }
 
     @Override

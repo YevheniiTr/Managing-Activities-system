@@ -74,6 +74,7 @@ CREATE TABLE Edge
     applVenueID BIGSERIAL REFERENCES ApplicationToGetVenue (id) NOT NULL,
     startDate   timestamp                                       NOT NULL,
     isMatching  bool DEFAULT 'false'                            NOT NULL,
+    status      varchar(32) DEFAULT 'EXPECT',
     UNIQUE (venueID, applVenueID, startDate)
 );
 CREATE TABLE Profile
@@ -262,3 +263,15 @@ SELECT v.* FROM applicationtogetvenue a
                     JOIN Venue v on e.venueid  = v.id
 WHERE v.userid =25;
 
+ALTER TABLE Edge ADD COLUMN  status varchar(32) not null default 'EXPECT';
+
+SELECT
+    e.*
+FROM
+    Edge e
+        JOIN
+    Venue v ON e.venueID = v.id
+JOIN users  u on v.userid =u.id
+WHERE
+                v.userID = 25
+  AND DATE(e.startDate) = '2024-05-02';

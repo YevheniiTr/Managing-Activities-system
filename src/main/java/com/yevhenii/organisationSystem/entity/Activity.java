@@ -30,7 +30,7 @@ public class Activity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userID")
     User user;
-    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "activity", fetch = FetchType.EAGER)
     List<ApplicationToGetVenue> applicationToGetVenueList;
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     List<PlannedActivities> plannedActivitiesList;

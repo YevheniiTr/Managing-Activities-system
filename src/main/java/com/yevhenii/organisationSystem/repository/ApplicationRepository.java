@@ -25,4 +25,9 @@ public interface ApplicationRepository extends JpaRepository<ApplicationToGetVen
 //    List<Edge> findAllForOwner(long userId);
     @Query("select e from Edge e  where e.venue.user.id = :userId")
     List <Edge> findAllForOwner(long userId);
+
+
+
+
+
 }
