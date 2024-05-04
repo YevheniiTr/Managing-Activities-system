@@ -24,7 +24,7 @@ public class Venue extends BaseEntity {
     private String adresIndex;
     @Column(name = "rentprice")
     private int rentPrice;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
             @JoinColumn(name = "streetid")
     Street street;
     @ManyToOne(fetch = FetchType.LAZY)

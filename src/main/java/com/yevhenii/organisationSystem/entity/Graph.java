@@ -17,6 +17,7 @@ public class Graph {
     int[] matching;
     Map<Venue, ApplicationToGetVenue> resultMatching;
     List<Edge> resultMatchingEdgeList;
+    List<Edge> edgesWithNoVenues;
 
     // кол-во строк =  кол-во заявок, каждая строка = заявка
     // кол-во столбцов = кол-во залов, номер столбца -> номер зала +1
@@ -77,8 +78,8 @@ public class Graph {
     public int[] maximumBipartiteMatching() {
         Arrays.fill(matching, -1);
         for (int application = 0; application < numApplications; application++) {
-            boolean[] visited = new boolean[numVenues];
-            Arrays.fill(visited,false);
+            boolean[] visited = new boolean[numApplications];
+            Arrays.fill(visited, false);
             dfs(application, visited);
         }
         return matching;
@@ -94,9 +95,9 @@ public class Graph {
     }
 
     public void createResultEdgeList() {
-        for(Edge e: edgeList) {
+        for (Edge e : edgeList) {
             for (int i = 0; i < matching.length; i++) {
-                if (matching[i] != -1 && e.getApplicationToGetVenue().equals(applicationList.get(matching[i])) &&  e.getVenue().equals(venueList.get(i))) {
+                if (matching[i] != -1 && e.getApplicationToGetVenue().equals(applicationList.get(matching[i])) && e.getVenue().equals(venueList.get(i))) {
                     resultMatchingEdgeList.add(e);
                 }
             }
@@ -110,7 +111,60 @@ public class Graph {
         }
     }
 
+    public List<Edge> getApplicationEdgeList(ApplicationToGetVenue application) {
+        List<Edge> edgeResultList = new ArrayList<>();
+        for (Edge edge : edgeList) {
+            if (edge.getApplicationToGetVenue().equals(application)) edgeResultList.add(edge);
+        }
+        return edgeResultList;
+    }
 
+    public List<String> getCityNameOnEdge(List<Edge> applicationEdgeList) {
+        List<String> cityNames = new ArrayList<>();
+        for(Edge edge : applicationEdgeList){
+            cityNames.add(edge.getVenue().getStreet().getCity().getCityName());
+        }
+        return  cityNames;
+    }
+    public List<Venue> removeSimilarVenue(List<Venue> venues){
+        List<Venue> uniqueVenues = new ArrayList<>(venues);
+
+
+        Iterator<Venue> it = uniqueVenues.iterator();
+
+        while (it.hasNext()) {
+            Venue venue = it.next();
+            for (Venue algoVenue : venueList) {
+                if (venue.equals(algoVenue)) {
+                    it.remove();
+                    break;
+                }
+            }
+        }
+
+        return uniqueVenues;
+    }
+
+
+    public List<ApplicationToGetVenue> getApplicationsNotInResultMatching() {
+        List<ApplicationToGetVenue> notInMatching = new ArrayList<>();
+        for (ApplicationToGetVenue application : applicationList) {
+            boolean isMatched = false;
+
+            for (Edge edge : resultMatchingEdgeList) {
+                if (edge.getApplicationToGetVenue().equals(application)) {
+                    isMatched = true;
+                    break;
+                }
+            }
+
+
+            if (!isMatched) {
+                notInMatching.add(application);
+            }
+        }
+        return notInMatching;
+    }
 
 
     public void changeStatus() {
@@ -124,4 +178,6 @@ public class Graph {
     public int[][] getAdjMatrix() {
         return adjMatrix;
     }
+
+
 }

@@ -1,22 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Власні майданчики</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile_my.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
+<body class="app-body">
 <div class="header">
     <div class="header-app-name">
         <h1>EasyEvent</h1>
     </div>
     <div class="header-links">
+        <a th:href="@{/index}">Головна</a>
         <a th:href="@{/venues/create}">Власникам майданчиків</a>
         <a th:href="@{/sendApplicationForm}">Організаторам</a>
+
         <ul class="menu">
             <li>
-                <a th:href="@{/profile/me}">Мій акаунт</a>
-                <ul>
-                    <li>
-                        <a th:href="@{/login}">Вийти</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/applications/my}">Заявки</a>
-                    </li>
-                </ul>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                    <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                        <li>
+                            <a th:href="@{/logout}">Вийти</a>
+                        </li>
+                    </ul>
+
+
             </li>
         </ul>
     </div>
 </div>
+
+
+</body>
+</html>

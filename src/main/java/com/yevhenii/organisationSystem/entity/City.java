@@ -16,7 +16,7 @@ public class City extends BaseEntity {
 
     @Column(name = "cityname")
     private String cityName;
-    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
     List<Street> streetList;
 
     public City(Long id) {

@@ -275,3 +275,21 @@ JOIN users  u on v.userid =u.id
 WHERE
                 v.userID = 25
   AND DATE(e.startDate) = '2024-05-02';
+
+
+SELECT v.* FROM venue v
+            LEFT JOIN PlannedActivities pa
+              ON pa.venueId = v.id
+              AND DATE(pa.startDate) <= '01-05-2024'
+              AND DATE(pa.endDate) >= '01-05-2024'
+            WHERE pa.id IS NULL;
+
+
+SELECT v.* FROM venue v
+                        LEFT JOIN PlannedActivities pa
+                          ON pa.venueId = v.id
+                          AND DATE(pa.startDate) <= '03-05-2024'
+                          AND DATE(pa.endDate) >= '03-05-2024'
+           LEFT JOIN Street s on v.streetid = s.id
+           LEFT JOIN City c on s.cityid = c.id
+                        WHERE pa.id IS NULL AND v.maximumseats >=1 AND c.cityName ='Львів';

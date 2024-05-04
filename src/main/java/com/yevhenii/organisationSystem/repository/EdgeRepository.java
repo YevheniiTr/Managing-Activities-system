@@ -46,6 +46,9 @@ public interface EdgeRepository extends JpaRepository<Edge,Long> {
     );
 
 
+
+
+
     @Query("select e from Edge e where e.applicationToGetVenue.activity.user.id = :userId")
     List<Edge> findOrganisatorApplicationsByUserId(long userId);
 

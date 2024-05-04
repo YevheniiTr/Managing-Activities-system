@@ -45,17 +45,19 @@ public class FilterController {
         List<Venue> listForFilter;
         System.out.println(filterDate);
         if (filterDate != null) {
-            Timestamp date = Timestamp.valueOf(filterDate + " " + "00:00:00");
+            LocalDate date = LocalDate.parse(filterDate);
+            System.out.println(date);
             listForFilter = venueService.findAllFreeVenuesForDate(date);
-
         } else {
             listForFilter = venueService.findAllFreeVenuesForCurrentDate();
         }
+        System.out.println(listForFilter);
         List<Venue> filteredList = listForFilter.stream()
                 .filter(venue -> (filterCity == null || venue.getStreet().getCity().getCityName().equalsIgnoreCase(filterCity)))
                 .filter(venue -> (filterPrice == null || venue.getRentPrice() >= filterPrice))
                 .filter(venue -> (filterCapacity == null || venue.getMaximumSeats() >= filterCapacity))
                 .collect(Collectors.toList());
+
         redirectAttributes.addFlashAttribute("filteredList", filteredList);
         return new RedirectView("/sendApplicationForm");
     }

@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,6 +27,20 @@ public class PlannedActivities extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venueid")
     Venue venue;
+
+
+
+    public String  getStartTime(){
+        LocalDateTime localDateTime = startDate.toLocalDateTime();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        return localDateTime.toLocalTime().format(timeFormatter);
+    }
+
+    public String  getOnlyStartDate(){
+        LocalDateTime localDateTime = startDate.toLocalDateTime();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDateTime.toLocalDate().format(dateFormatter);
+    }
 
 
 }

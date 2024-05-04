@@ -4,8 +4,11 @@ import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.SaveVenueDTO;
 import com.yevhenii.organisationSystem.dto.VenueDTO;
 import com.yevhenii.organisationSystem.entity.City;
+import com.yevhenii.organisationSystem.entity.PlannedActivities;
 import com.yevhenii.organisationSystem.entity.Street;
+import com.yevhenii.organisationSystem.repository.PlannedActivityRepository;
 import com.yevhenii.organisationSystem.services.CityService;
+import com.yevhenii.organisationSystem.services.PlannedActivitiesService;
 import com.yevhenii.organisationSystem.services.VenueService;
 import com.yevhenii.organisationSystem.services.StreetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +30,15 @@ public class VenueController {
     VenueService venueService;
     CityService cityService;
     StreetService streetService;
+    PlannedActivitiesService plannedActivitiesService;
 
     @Autowired
-    public VenueController(VenueService venueService, SecurityUtils securityUtils, CityService cityService, StreetService streetService) {
+    public VenueController(PlannedActivitiesService plannedActivitiesService,VenueService venueService, SecurityUtils securityUtils, CityService cityService, StreetService streetService) {
         this.venueService = venueService;
         this.securityUtils = securityUtils;
         this.cityService = cityService;
         this.streetService = streetService;
+        this.plannedActivitiesService = plannedActivitiesService;
     }
 
     @PostMapping("/venues/createVenue")
@@ -66,6 +71,8 @@ public class VenueController {
         VenueDTO VenueDTO = venueService.findById(venueId).
                 orElseThrow(() -> new EntityNotFoundException("Venue with id " + venueId + " does not exist"));
         model.addAttribute("venue", VenueDTO);
+        List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.getPlannedActivities(venueId);
+        model.addAttribute("plannedActivities",plannedActivitiesList);
         return "venueDetails";
     }
 

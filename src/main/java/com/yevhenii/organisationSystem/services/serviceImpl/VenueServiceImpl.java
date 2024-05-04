@@ -4,10 +4,7 @@ import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.mapper.ApplicationMapper;
 import com.yevhenii.organisationSystem.dto.SaveVenueDTO;
 import com.yevhenii.organisationSystem.dto.VenueDTO;
-import com.yevhenii.organisationSystem.entity.City;
-import com.yevhenii.organisationSystem.entity.Street;
-import com.yevhenii.organisationSystem.entity.User;
-import com.yevhenii.organisationSystem.entity.Venue;
+import com.yevhenii.organisationSystem.entity.*;
 import com.yevhenii.organisationSystem.repository.CityRepository;
 import com.yevhenii.organisationSystem.repository.StreetRepository;
 import com.yevhenii.organisationSystem.repository.VenueRepository;
@@ -17,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,7 +128,7 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<Venue> findAllFreeVenuesForDate(Timestamp date) {
+    public List<Venue> findAllFreeVenuesForDate(LocalDate date) {
         return venueRepository.findAllFreeVenuesForDate(date);
     }
 
@@ -138,6 +136,13 @@ public class VenueServiceImpl implements VenueService {
     public List<Venue> findAll() {
         return venueRepository.findAll();
     }
+
+    @Override
+    public List<Venue> findFreeVenuesByDateCapacityCity(LocalDate localDate, int amountSeats, String cityName) {
+        return venueRepository.findFreeVenuesByDateCapacityCity(localDate, amountSeats, cityName);
+    }
+
+
 
 
 }

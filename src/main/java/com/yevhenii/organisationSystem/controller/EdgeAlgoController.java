@@ -8,6 +8,7 @@ import com.yevhenii.organisationSystem.services.ApplicationService;
 import com.yevhenii.organisationSystem.services.EdgeService;
 import com.yevhenii.organisationSystem.services.KunAlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +52,6 @@ public class EdgeAlgoController {
         List<Edge> edgeList = kunAlgorithmService.getEdgesForVenues(localDate, securityUtils.getUserId());
         Map<Venue, ApplicationToGetVenue> result = kunAlgorithmService.doKuhnAlgorithm(edgeList);
         List<Edge> resultList = kunAlgorithmService.getKuhnResultList(edgeList);
-        System.out.println(resultList);
         //redirectAttributes.addFlashAttribute("resultAlgorithm",resultList);
         HttpSession session = getSession();
         session.setAttribute("resultAlgorithm", resultList);
@@ -69,6 +69,7 @@ public class EdgeAlgoController {
         applicationService.approve(id);
         return new RedirectView("/getAlgoResultPage");
     }
+
 
 
 

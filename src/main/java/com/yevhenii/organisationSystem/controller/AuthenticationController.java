@@ -11,10 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
@@ -54,6 +56,7 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String login() {
+
         return "login";
     }
 
@@ -62,11 +65,13 @@ public class AuthenticationController {
     @PostMapping("/login")
     public RedirectView login(@RequestParam String email,
                               @RequestParam String password,
-                              HttpSession session) {
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         return new RedirectView("/index");
     }
 

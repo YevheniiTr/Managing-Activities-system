@@ -23,7 +23,7 @@ public class Edge extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EApplicationStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "venueid")
     Venue venue;
     @ManyToOne(fetch = FetchType.EAGER)
