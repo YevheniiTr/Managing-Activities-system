@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -21,10 +22,10 @@ public class PlannedActivities extends BaseEntity{
     private Timestamp endDate;
     @Column(name = "status")
     private String status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "activityid")
     Activity activity;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "venueid")
     Venue venue;
 
@@ -42,5 +43,14 @@ public class PlannedActivities extends BaseEntity{
         return localDateTime.toLocalDate().format(dateFormatter);
     }
 
+    public String getFormattedStartDateTime() {
+        Locale ukrainianLocale = new Locale("uk", "UA");
+        LocalDateTime localDateTime = startDate.toLocalDateTime();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy",ukrainianLocale);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm",ukrainianLocale);
+
+        // Об'єднання дати та часу в потрібному форматі
+        return localDateTime.format(dateFormatter) + " о " + localDateTime.format(timeFormatter);
+    }
 
 }

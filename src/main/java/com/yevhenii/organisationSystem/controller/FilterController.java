@@ -3,8 +3,10 @@ package com.yevhenii.organisationSystem.controller;
 import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.mapper.ApplicationMapper;
 import com.yevhenii.organisationSystem.entity.Edge;
+import com.yevhenii.organisationSystem.entity.PlannedActivities;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.repository.EdgeRepository;
+import com.yevhenii.organisationSystem.services.PlannedActivitiesService;
 import com.yevhenii.organisationSystem.services.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @Controller
 public class FilterController {
 
@@ -26,13 +27,15 @@ public class FilterController {
     ApplicationMapper applicationMapper;
     EdgeRepository edgeService;
     SecurityUtils securityUtils;
+    PlannedActivitiesService plannedActivitiesService;
 
     @Autowired
-    public FilterController(VenueService venueService, ApplicationMapper applicationMapper, EdgeRepository edgeService, SecurityUtils securityUtils) {
+    public FilterController(PlannedActivitiesService plannedActivitiesService, VenueService venueService, ApplicationMapper applicationMapper, EdgeRepository edgeService, SecurityUtils securityUtils) {
         this.venueService = venueService;
         this.applicationMapper = applicationMapper;
         this.edgeService = edgeService;
         this.securityUtils = securityUtils;
+        this.plannedActivitiesService = plannedActivitiesService;
     }
 
     @PostMapping("/filter")
@@ -78,12 +81,11 @@ public class FilterController {
 
 
         List<Edge> filteredList;
-        if(!filterVenue.equals("")){
-             filteredList = listForFilter.stream()
+        if (!filterVenue.equals("")) {
+            filteredList = listForFilter.stream()
                     .filter(edge -> (filterVenue == null || edge.getVenue().getTitle().equalsIgnoreCase(filterVenue)))
                     .collect(Collectors.toList());
-        }
-        else filteredList = listForFilter;
+        } else filteredList = listForFilter;
         redirectAttributes.addFlashAttribute("filteredOwnerList", filteredList);
         return new RedirectView("/getOwnerApplications");
     }
@@ -105,6 +107,27 @@ public class FilterController {
         System.out.println(filteredList);
         redirectAttributes.addFlashAttribute("filteredOrganisatorList", filteredList);
         return new RedirectView("/getOrganisatorApplication");
+    }
+
+    @PostMapping("/filterPlanned")
+    public RedirectView filterPlannedActivities(
+            @RequestParam(required = true) String filterDate,
+            @RequestParam String filterGenre,
+            @RequestParam (required = false) String filterStyle,
+            RedirectAttributes redirectAttributes) {
+        List<PlannedActivities> listForFilter;
+        LocalDate localDate = LocalDate.parse(filterDate);
+        listForFilter = plannedActivitiesService.findAllForToday();
+
+        List<PlannedActivities> filteredList = listForFilter.stream()
+                .filter(plannedActivity -> (localDate == null || plannedActivity.getStartDate().toLocalDateTime().toLocalDate().isEqual(localDate)) &&
+                                (filterGenre == null || filterGenre.isEmpty() || plannedActivity.getActivity().getGenre().equalsIgnoreCase(filterGenre)) &&
+                                (filterStyle == null || filterStyle.isEmpty() || plannedActivity.getActivity().getActivityType().equalsIgnoreCase(filterStyle))
+                )
+                .collect(Collectors.toList());
+        System.out.println(filteredList);
+        redirectAttributes.addFlashAttribute("filteredOrganisatorList", filteredList);
+        return new RedirectView("/index");
     }
 
 

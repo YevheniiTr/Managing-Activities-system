@@ -21,4 +21,9 @@ public class PlannedActivtiesServiceImpl implements PlannedActivitiesService {
     public List<PlannedActivities> getPlannedActivities(Long venueId) {
         return plannedActivityRepository.getPlannedActivities(venueId);
     }
+
+    @Override
+    public List<PlannedActivities> findAllForToday() {
+        return plannedActivityRepository.findAllForToday();
+    }
 }

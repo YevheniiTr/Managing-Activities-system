@@ -2,7 +2,9 @@ package com.yevhenii.organisationSystem.controller;
 
 import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.controller.util.SessionUtils;
+import com.yevhenii.organisationSystem.entity.PlannedActivities;
 import com.yevhenii.organisationSystem.security.pojo.SignUpRequest;
+import com.yevhenii.organisationSystem.services.PlannedActivitiesService;
 import com.yevhenii.organisationSystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class AuthenticationController {
@@ -29,22 +32,33 @@ public class AuthenticationController {
     UserService userService;
     PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
+    PlannedActivitiesService plannedActivitiesService;
 
     @Autowired
     public AuthenticationController(SecurityUtils securityUtils,
                                     SessionUtils sessionUtils,
                                     UserService userService,
                                     PasswordEncoder passwordEncoder,
-                                    AuthenticationManager authenticationManager) {
+                                    AuthenticationManager authenticationManager,
+                                    PlannedActivitiesService plannedActivitiesService) {
         this.securityUtils = securityUtils;
         this.sessionUtils = sessionUtils;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.plannedActivitiesService = plannedActivitiesService;
     }
 
     @GetMapping({"/index", "/"})
-    public String index() {
+    public String index(Model model) {
+
+        if(model.containsAttribute("filteredOrganisatorList")){
+            model.addAttribute("plannedActivities", model.getAttribute("filteredOrganisatorList"));
+        }
+        else {
+            List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.findAllForToday();
+            model.addAttribute("plannedActivities",plannedActivitiesList);
+        }
         return "index";
     }
 

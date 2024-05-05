@@ -64,7 +64,13 @@
                 <label class="field-name">Стиль</label>
                 <p class="field-value" type="text"  th:text="${activity.getActivityType()}">
             </div>
+
+            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/create}" class="standart-button">Додати афішу</a>
+            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/delete}" class="standart-button">Видалити афішу</a>
+            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/update}" class="standart-button">Оновити афішу</a>
+
             <a th:href="@{/profile/me}" class="standart-button">Назад</a>
+
         </div>
     </div>
 </div>

@@ -8,4 +8,6 @@ import java.util.List;
 @Service
 public interface PlannedActivitiesService {
     List<PlannedActivities> getPlannedActivities(Long venueId);
+
+    List<PlannedActivities> findAllForToday();
 }

@@ -24,7 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/static/**",
             "/register",
             "/login",
-            "/index"
+            "/index",
+
     };
 
     @Autowired
@@ -35,8 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
                 .authorizeRequests()
-                .antMatchers(WHITELIST).permitAll()
-                .anyRequest().authenticated();
+                .antMatchers(WHITELIST).permitAll();
+//                .anyRequest().authenticated();
     }
 
     @Bean

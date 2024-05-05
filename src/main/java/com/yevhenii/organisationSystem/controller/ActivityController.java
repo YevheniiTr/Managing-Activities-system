@@ -2,6 +2,8 @@ package com.yevhenii.organisationSystem.controller;
 
 import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.*;
+import com.yevhenii.organisationSystem.dto.mapper.ApplicationMapper;
+import com.yevhenii.organisationSystem.entity.Activity;
 import com.yevhenii.organisationSystem.services.ActivityService;
 
 import com.yevhenii.organisationSystem.services.ProfileService;
@@ -22,9 +24,10 @@ public class ActivityController {
     ActivityService activityService;
     SecurityUtils securityUtils;
     ProfileService profileService;
+    ApplicationMapper applicationMapper;
 
     @Autowired
-    public ActivityController(ActivityService activityService, SecurityUtils securityUtils, ProfileService profileService) {
+    public ActivityController(ApplicationMapper applicationMapper,ActivityService activityService, SecurityUtils securityUtils, ProfileService profileService) {
         this.securityUtils = securityUtils;
         this.activityService = activityService;
         this.profileService = profileService;
@@ -34,6 +37,8 @@ public class ActivityController {
         ActivityDTO activityDTO = activityService.findById(activityId)
                 .orElseThrow(()-> new EntityNotFoundException("Activity with id" + activityId +" does not exist" ));
         model.addAttribute("activity",activityDTO);
+        boolean isActivityBelongTouser = activityService.isActivityBelongToUser(securityUtils.getUserId(),activityId);
+        model.addAttribute("isActivityBelongToUser",isActivityBelongTouser);
         return "activityDetails";
     }
 

@@ -16,4 +16,6 @@ public interface PlannedActivityRepository extends JpaRepository<PlannedActiviti
 
     @Query("SELECT p FROM PlannedActivities p WHERE p.venue.id = :venueId AND DATE(p.startDate) >= CURRENT_DATE")
     List<PlannedActivities> getPlannedActivities(Long venueId);
+    @Query("SELECT  p from PlannedActivities  p WHERE DATE(p.startDate) >= current_date")
+    List<PlannedActivities> findAllForToday();
 }

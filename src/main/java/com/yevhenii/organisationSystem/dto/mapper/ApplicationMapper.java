@@ -15,6 +15,7 @@ public interface ApplicationMapper {
     @Mapping(source = "id",target = "id")
     ActivityDTO activityToDto(Activity activity);
     Activity SaveActivityDTOtoEntity(SaveActivityDTO saveActivityDTO);
+    Activity activityDTOtoEntity(ActivityDTO activityDTO);
     @Mapping(source = "street.streetName", target = "streetName")
     @Mapping(source = "street.city.cityName", target ="cityName")
     SaveVenueDTO venueToSaveDTO(Venue venue);
