@@ -18,7 +18,7 @@ public class SecurityUtils {
     public boolean checkAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<? extends GrantedAuthority> maybeAdminRole = ((UserDetailsImpl) authentication.getPrincipal()).getAuthorities().stream()
-                .filter(a -> a.getAuthority().equals("ADMIN"))
+                .filter(a -> a.getAuthority().equals("ROLE_ADMIN"))
                 .findFirst();
 
         return maybeAdminRole.isPresent();

@@ -119,11 +119,11 @@
         <h1>EasyEvent</h1>
     </div>
     <div class="header-links">
-        <a th:href="@{/index}">Головна</a>
-        <a th:href="@{/venues/create}">Власникам майданчиків</a>
-        <a th:href="@{/sendApplicationForm}">Організаторам</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
 
-        <a class="notification-icon" id="notification-icon">
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
             <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
         </a>
 
@@ -140,6 +140,9 @@
                 <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
                     <li>
                         <a th:href="@{/logout}">Вийти</a>
+                    </li>
+                    <li>
+                        <a th:if="${isAdmin}">Додати артиста</a>
                     </li>
                 </ul>
 

@@ -58,6 +58,9 @@ public class AuthenticationController {
             List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.findAllForToday();
             model.addAttribute("plannedActivities", plannedActivitiesList);
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails) model.addAttribute("isAdmin",securityUtils.checkAdmin());
         return "index";
     }
 

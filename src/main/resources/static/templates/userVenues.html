@@ -16,19 +16,34 @@
         <h1>EasyEvent</h1>
     </div>
     <div class="header-links">
-        <a th:href="@{/venues/create}">Власникам майданчиків</a>
-        <a th:href="@{/sendApplicationForm}">Організаторам</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/index}">Головна</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"  th:href="@{/venues/create}">Власникам майданчиків</a>
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" th:href="@{/sendApplicationForm}">Організаторам</a>
+
+        <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}" class="notification-icon" id="notification-icon">
+            <img src="/img/bellWhite.png" class="notification-img" alt="decline"/>
+        </a>
+
         <ul class="menu">
             <li>
-                <a th:href="@{/profile/me}">Мій акаунт</a>
-                <ul>
+                <a th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+
+                   th:href="@{/profile/me}" th:text="${#authentication.principal.username}">Мій акаунт</a>
+                <div th:unless="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                    <!-- If not authenticated or if principal is not UserDetails -->
+                    <a th:href="@{/login}">Увійти</a>
+                </div>
+
+                <ul th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
                     <li>
-                        <a th:href="@{/login}">Вийти</a>
+                        <a th:href="@{/logout}">Вийти</a>
                     </li>
-                    <li>
-                        <a th:href="@{/applications/my}">Заявки</a>
-                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a th:if="${isAdmin}">Додати артиста</a>-->
+                    <!--                    </li>-->
                 </ul>
+
+
             </li>
         </ul>
     </div>
