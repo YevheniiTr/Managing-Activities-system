@@ -178,9 +178,8 @@
                 <button class="filter-button">Застосувати фільтри</button>
             </form>
 
-            <div class="event-grid" th:each="planned: ${plannedActivities}">
-                <div class="event-card">
-
+            <div class="event-grid" >
+                <div class="event-card" th:each="planned: ${plannedActivities}">
                     <a target="_blank" th:href="@{/banner/details/{banerId}(banerId = ${planned.getActivity().getActivityBanner().getId()})}"><img th:src="@{'data:image/jpeg;base64,'+${planned.getActivity().getActivityBanner().generateBase64Image()}}" class="event-image" alt="profile"></a>
                     <div class="event-details">
                         <p  class="event-title" th:text="${planned.getActivity().getTitle()}">Назва події</p>
