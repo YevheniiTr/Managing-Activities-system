@@ -22,4 +22,6 @@ public interface ActivityRepository extends JpaRepository<Activity,Long> {
     List<Activity> findAllByUserId(Long userId);
 
     Optional<Activity> findById(Long activityId);
+    @Query("select count(b) > 0 from ActivityBanner b where b.activity.id =:activityId")
+    boolean doesActivityHaveBanner(Long activityId);
 }

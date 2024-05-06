@@ -64,10 +64,9 @@ public class ActivityServiceImpl  implements ActivityService {
     }
 
     @Override
-    public Optional<ActivityDTO> findById(Long activityId) {
+    public Optional<Activity> findById(Long activityId) {
         return activityRepository
-                .findById(activityId)
-                .map(applicationMapper::activityToDto);
+                .findById(activityId);
     }
 
     @Override
@@ -82,5 +81,10 @@ public class ActivityServiceImpl  implements ActivityService {
         activity.setGenre(saveActivityDTO.getGenre());
         activity.setActivityType(saveActivityDTO.getActivityType());
         activityRepository.save(activity);
+    }
+
+    @Override
+    public boolean doesActivityHaveBanner(Long activityId) {
+        return activityRepository.doesActivityHaveBanner(activityId);
     }
 }

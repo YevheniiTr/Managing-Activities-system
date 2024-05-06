@@ -42,35 +42,43 @@
             <h1 class="page-title" th:text="${activity.getTitle()}"></h1>
             <div class="inline-elements">
                 <p class="field-name">Назва</p>
-                <p class="field-value"    th:text="${activity.getTitle()}" >
+                <p class="field-value" th:text="${activity.getTitle()}">
             </div>
             <div class="inline-elements">
                 <p class="field-name">Кількість відвідувачів</p>
-                <p class="field-value"    th:text="${activity.getAmountSeats()}" >
+                <p class="field-value" th:text="${activity.getAmountSeats()}">
             </div>
             <div class="inline-elements">
                 <p class="field-name">Опис</p>
-                <p class="field-value"    th:text="${activity.getDescription()}"></p>
+                <p class="field-value" th:text="${activity.getDescription()}"></p>
             </div>
             <div class="inline-elements">
                 <label class="field-name">Організація</label>
-                <p class="field-value"   type="text" th:text="${activity.getOrganisation()}">
+                <p class="field-value" type="text" th:text="${activity.getOrganisation()}">
             </div>
             <div class="inline-elements">
                 <label class="field-name">Жанр</label>
-                <p class="field-value" id="genre"  th:text="${activity.getGenre()}">
+                <p class="field-value" id="genre" th:text="${activity.getGenre()}">
             </div>
             <div class="inline-elements">
                 <label class="field-name">Стиль</label>
-                <p class="field-value" type="text"  th:text="${activity.getActivityType()}">
+                <p class="field-value" type="text" th:text="${activity.getActivityType()}">
             </div>
-
-            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/create}" class="standart-button">Додати афішу</a>
-            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/delete}" class="standart-button">Видалити афішу</a>
-            <a  th:if="${isActivityBelongToUser}" th:href="@{/banner/update}" class="standart-button">Оновити афішу</a>
-
-            <a th:href="@{/profile/me}" class="standart-button">Назад</a>
-
+            <div th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}">
+                <a th:if="${isActivityBelongToUser}" th:unless="${doesActivityHaveBanner}"
+                   th:href="@{/banner/create/{activityId}(activityId =${activity.getId()})}" class="standart-button">Додати
+                    афішу</a>
+                <a th:if="${isActivityBelongToUser && doesActivityHaveBanner}"
+                   th:href="@{/banner/delete/{bannerId}(bannerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Видалити афішу</a>
+                <a th:if="${isActivityBelongToUser && doesActivityHaveBanner}"
+                   th:href="@{/banner/update/{bannerId}(bannerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Оновити афішу</a>
+                <a th:if="${doesActivityHaveBanner}"
+                   th:href="@{/banner/details/{banerId}(banerId =${activity.getActivityBanner().getId()})}"
+                   class="standart-button">Переглянути афішу</a>
+                <a th:href="@{/profile/me}" class="standart-button">Назад</a>
+            </div>
         </div>
     </div>
 </div>

@@ -6,14 +6,11 @@ import com.yevhenii.organisationSystem.dto.VenueDTO;
 import com.yevhenii.organisationSystem.entity.City;
 import com.yevhenii.organisationSystem.entity.PlannedActivities;
 import com.yevhenii.organisationSystem.entity.Street;
-import com.yevhenii.organisationSystem.repository.PlannedActivityRepository;
 import com.yevhenii.organisationSystem.services.CityService;
 import com.yevhenii.organisationSystem.services.PlannedActivitiesService;
 import com.yevhenii.organisationSystem.services.VenueService;
 import com.yevhenii.organisationSystem.services.StreetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +68,7 @@ public class VenueController {
         VenueDTO VenueDTO = venueService.findById(venueId).
                 orElseThrow(() -> new EntityNotFoundException("Venue with id " + venueId + " does not exist"));
         model.addAttribute("venue", VenueDTO);
-        List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.getPlannedActivities(venueId);
+        List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.getPlannedActivitiesByVenue(venueId);
         model.addAttribute("plannedActivities",plannedActivitiesList);
         return "venueDetails";
     }

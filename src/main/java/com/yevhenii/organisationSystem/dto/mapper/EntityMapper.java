@@ -21,5 +21,6 @@ public class EntityMapper {
     }
     public Venue toVenue(Long id){return new Venue(id);}
     public Profile toProfile(Long id){return  new Profile(id);}
+    public ActivityBanner toBanner(Long id){return  new ActivityBanner(id);}
 
 }

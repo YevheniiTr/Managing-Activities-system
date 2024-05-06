@@ -52,12 +52,11 @@ public class AuthenticationController {
     @GetMapping({"/index", "/"})
     public String index(Model model) {
 
-        if(model.containsAttribute("filteredOrganisatorList")){
+        if (model.containsAttribute("filteredOrganisatorList")) {
             model.addAttribute("plannedActivities", model.getAttribute("filteredOrganisatorList"));
-        }
-        else {
+        } else {
             List<PlannedActivities> plannedActivitiesList = plannedActivitiesService.findAllForToday();
-            model.addAttribute("plannedActivities",plannedActivitiesList);
+            model.addAttribute("plannedActivities", plannedActivitiesList);
         }
         return "index";
     }
@@ -79,24 +78,50 @@ public class AuthenticationController {
     @PostMapping("/login")
     public RedirectView login(@RequestParam String email,
                               @RequestParam String password,
-                              HttpSession session,
+                              Model model,
                               RedirectAttributes redirectAttributes) {
+        if (model.containsAttribute("errorMessage")) {
+            model.addAttribute("errorMessage", model.getAttribute("errorMessage"));
+        }
+        if (email.equals("") || password.equals("")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Введено пусті поля");
+            return new RedirectView("/login");
+        }
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new RedirectView("/index");
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new RedirectView("/index");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Неправильний логін або пароль");
+            return new RedirectView("/login");
+        }
     }
 
     @PostMapping("/register")
     public RedirectView register(@RequestParam String email,
-                                 @RequestParam String password) {
+                                 @RequestParam String password,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+        if (model.containsAttribute("errorMessage")) {
+            model.addAttribute("errorMessage", model.getAttribute("errorMessage"));
+        }
+        if (email.equals("") || password.equals("")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Введено пусті поля");
+            return new RedirectView("/register");
+        } else if (userService.findByEmail(email).isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ця електронна пошта вже використовується");
+            return new RedirectView("/register");
+        }
 
-        userService.register(new SignUpRequest(
-                email,
-                passwordEncoder.encode(password)
-        ));
+        if (userService.findByEmail(email).isEmpty()) {
+            userService.register(new SignUpRequest(
+                    email,
+                    passwordEncoder.encode(password)
+            ));
+        }
         return new RedirectView("login");
     }
 

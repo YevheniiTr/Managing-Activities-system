@@ -18,12 +18,17 @@ public class PlannedActivtiesServiceImpl implements PlannedActivitiesService {
     }
 
     @Override
-    public List<PlannedActivities> getPlannedActivities(Long venueId) {
-        return plannedActivityRepository.getPlannedActivities(venueId);
+    public List<PlannedActivities> getPlannedActivitiesByVenue(Long venueId) {
+        return plannedActivityRepository.getPlannedActivitiesByVenue(venueId);
     }
 
     @Override
     public List<PlannedActivities> findAllForToday() {
         return plannedActivityRepository.findAllForToday();
+    }
+
+    @Override
+    public List<PlannedActivities> getPlannedActivities(Long activityId) {
+        return plannedActivityRepository.getPlannedActivities(activityId);
     }
 }

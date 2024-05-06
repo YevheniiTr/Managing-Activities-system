@@ -61,7 +61,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void delete(Long edgeId) {
         Optional<Edge> edge = edgeRepository.findById(edgeId);
         ApplicationToGetVenue applicationToGetVenue = edge.get().getApplicationToGetVenue();
-        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityId(applicationToGetVenue.getActivity().getId());
+        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityIdAndDate(applicationToGetVenue.getActivity().getId(),edge.get().getDate());
         if(plannedActivities.isPresent()) plannedActivityRepository.delete(plannedActivities.get());
         edgeRepository.delete(edge.get());
     }
@@ -108,7 +108,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Optional<Edge> edgeOptional = edgeRepository.findById(edgeId);
         Edge edge1 = edgeOptional.get();
         ApplicationToGetVenue applicationToGetVenue = edge1.getApplicationToGetVenue();
-        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityId(applicationToGetVenue.getActivity().getId());
+        Optional<PlannedActivities> plannedActivities = plannedActivityRepository.findByActivityIdAndDate(applicationToGetVenue.getActivity().getId(),edge1.getDate());
         if(plannedActivities.isPresent()) plannedActivityRepository.delete(plannedActivities.get());
         edge1.setStatus(EApplicationStatus.DECLINED);
         edgeRepository.save(edge1);

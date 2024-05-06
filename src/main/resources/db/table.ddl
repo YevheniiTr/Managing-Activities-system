@@ -73,7 +73,7 @@ CREATE TABLE Edge
     venueID     BIGSERIAL REFERENCES venue (id)                 NOT NULL,
     applVenueID BIGSERIAL REFERENCES ApplicationToGetVenue (id) NOT NULL,
     startDate   timestamp                                       NOT NULL,
-    isMatching  bool DEFAULT 'false'                            NOT NULL,
+    isMatching  bool        DEFAULT 'false'                     NOT NULL,
     status      varchar(32) DEFAULT 'EXPECT',
     UNIQUE (venueID, applVenueID, startDate)
 );
@@ -100,7 +100,19 @@ CREATE TABLE ArtistPage
 );
 CREATE TABLE BanerPage
 (
+    id          BIGSERIAL PRIMARY KEY,
+    activityId  BIGSERIAL REFERENCES Activity (id) NOT NULL,
+    description text                               NOT NULL,
+    image       bytea                              NOT NULL
 );
+CREATE TABLE announcement
+(
+    id BIGSERIAL PRIMARY KEY,
+    bannerId BIGSERIAL references  banerpage(id) NOT NULL ,
+    description text NOT NULL,
+    dateposted timestamp NOT NULL
+);
+DROP TABLE BanerPage;
 CREATE TABLE PlannedActivities
 (
     id         BIGSERIAL PRIMARY KEY,
@@ -253,43 +265,47 @@ WHERE isMatching = true;
 SELECT DISTINCT applVenueID
 FROM edge;
 
-SELECT e.* FROM applicationtogetvenue a
-JOIN Edge e on a.id = e.applvenueid
-JOIN Venue v on e.venueid  = v.id
-WHERE v.userid =25;
+SELECT e.*
+FROM applicationtogetvenue a
+         JOIN Edge e on a.id = e.applvenueid
+         JOIN Venue v on e.venueid = v.id
+WHERE v.userid = 25;
 
-SELECT v.* FROM applicationtogetvenue a
-                    JOIN Edge e on a.id = e.applvenueid
-                    JOIN Venue v on e.venueid  = v.id
-WHERE v.userid =25;
+SELECT v.*
+FROM applicationtogetvenue a
+         JOIN Edge e on a.id = e.applvenueid
+         JOIN Venue v on e.venueid = v.id
+WHERE v.userid = 25;
 
-ALTER TABLE Edge ADD COLUMN  status varchar(32) not null default 'EXPECT';
+ALTER TABLE Edge
+    ADD COLUMN status varchar(32) not null default 'EXPECT';
 
-SELECT
-    e.*
-FROM
-    Edge e
-        JOIN
-    Venue v ON e.venueID = v.id
-JOIN users  u on v.userid =u.id
-WHERE
-                v.userID = 25
+SELECT e.*
+FROM Edge e
+         JOIN
+     Venue v ON e.venueID = v.id
+         JOIN users u on v.userid = u.id
+WHERE v.userID = 25
   AND DATE(e.startDate) = '2024-05-02';
 
 
-SELECT v.* FROM venue v
-            LEFT JOIN PlannedActivities pa
-              ON pa.venueId = v.id
-              AND DATE(pa.startDate) <= '01-05-2024'
-              AND DATE(pa.endDate) >= '01-05-2024'
-            WHERE pa.id IS NULL;
+SELECT v.*
+FROM venue v
+         LEFT JOIN PlannedActivities pa
+                   ON pa.venueId = v.id
+                       AND DATE(pa.startDate) <= '01-05-2024'
+                       AND DATE(pa.endDate) >= '01-05-2024'
+WHERE pa.id IS NULL;
 
 
-SELECT v.* FROM venue v
-                        LEFT JOIN PlannedActivities pa
-                          ON pa.venueId = v.id
-                          AND DATE(pa.startDate) <= '03-05-2024'
-                          AND DATE(pa.endDate) >= '03-05-2024'
-           LEFT JOIN Street s on v.streetid = s.id
-           LEFT JOIN City c on s.cityid = c.id
-                        WHERE pa.id IS NULL AND v.maximumseats >=1 AND c.cityName ='Львів';
+SELECT v.*
+FROM venue v
+         LEFT JOIN PlannedActivities pa
+                   ON pa.venueId = v.id
+                       AND DATE(pa.startDate) <= '03-05-2024'
+                       AND DATE(pa.endDate) >= '03-05-2024'
+         LEFT JOIN Street s on v.streetid = s.id
+         LEFT JOIN City c on s.cityid = c.id
+WHERE pa.id IS NULL
+  AND v.maximumseats >= 1
+  AND c.cityName = 'Львів';

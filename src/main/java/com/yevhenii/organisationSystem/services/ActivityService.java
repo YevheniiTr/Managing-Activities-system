@@ -13,6 +13,8 @@ public interface ActivityService {
     void delete(Long activityId);
     boolean isActivityBelongToUserByTitle(Long userId,String activityTitle);
     List<ActivityDTO> findAllByUserId(Long userId);
-    Optional<ActivityDTO> findById(Long activityId);
+    Optional<Activity> findById(Long activityId);
     void update(SaveActivityDTO saveActivityDTO,Long activityId);
+
+    boolean doesActivityHaveBanner(Long activityId);
 }

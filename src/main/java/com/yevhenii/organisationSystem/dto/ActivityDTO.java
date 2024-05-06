@@ -1,6 +1,7 @@
 package com.yevhenii.organisationSystem.dto;
 
 
+import com.yevhenii.organisationSystem.entity.ActivityBanner;
 import lombok.Data;
 
 @Data
@@ -13,4 +14,5 @@ public class ActivityDTO {
     private String genre;
     private String activityType;
     private Long userId;
+
 }

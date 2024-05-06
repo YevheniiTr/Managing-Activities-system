@@ -35,6 +35,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        margin-right: 20px;
     }
 
     .venue-table th, .venue-table td {
@@ -94,6 +95,11 @@
     .button-group {
         object-position: center;
         gap: 10px;
+    }
+    .del-announc:hover{
+        cursor: pointer;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
     }
 </style>
 
@@ -183,9 +189,9 @@
                         </td>
                         <td th:text="${edge.getApplicationToGetVenue().getStartDate()}"></td>
                         <td th:text="${edge.getApplicationToGetVenue().getEndDate()}"></td>
-                        <td style="align-content: center">
-                            <div class="button-group">
-                                <a th:href="@{'applications/delete/' + ${edge.getId()}}" class="delete-but">
+                        <td>
+                            <div style="align-items: center; display: flex">
+                                <a   th:href="@{'applications/delete/' + ${edge.getId()}}" style="background-color: white" class="delete-but del-announc">
                                     <img src="/img/delete.png" class="delete-img" alt="Delete"/>
                                 </a>
                             </div>

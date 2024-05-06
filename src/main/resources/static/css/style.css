@@ -321,3 +321,15 @@ input[type=checkbox] {
 	height: 35px; /* You can adjust the size of the delete icon as needed */
 }
 
+.notification-icon {
+	position: relative;
+	cursor: pointer;
+}
+
+.notification-img {
+	width: 35px;
+	height: 26px;
+}
+.error-text{
+	color: red;
+}

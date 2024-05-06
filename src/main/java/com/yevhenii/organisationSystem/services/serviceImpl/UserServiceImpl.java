@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,5 +40,10 @@ public class UserServiceImpl implements UserService {
         Profile profile = new Profile("","","","",user);
         userRepository.save(user);
         profileRepository.save(profile);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

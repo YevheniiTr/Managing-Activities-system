@@ -9,6 +9,8 @@ import com.yevhenii.organisationSystem.services.ActivityService;
 import com.yevhenii.organisationSystem.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +36,17 @@ public class ActivityController {
     }
     @GetMapping("/activity/{activityId}")
     public String getActivityDetails(@PathVariable Long activityId, Model model){
-        ActivityDTO activityDTO = activityService.findById(activityId)
+        Activity activity = activityService.findById(activityId)
                 .orElseThrow(()-> new EntityNotFoundException("Activity with id" + activityId +" does not exist" ));
-        model.addAttribute("activity",activityDTO);
-        boolean isActivityBelongTouser = activityService.isActivityBelongToUser(securityUtils.getUserId(),activityId);
-        model.addAttribute("isActivityBelongToUser",isActivityBelongTouser);
+
+        model.addAttribute("activity",activity);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails){
+            boolean isActivityBelongTouser = activityService.isActivityBelongToUser(securityUtils.getUserId(),activityId);
+            model.addAttribute("isActivityBelongToUser",isActivityBelongTouser);
+            boolean doesActivityHaveBanner = activityService.doesActivityHaveBanner(activityId);
+            model.addAttribute("doesActivityHaveBanner",doesActivityHaveBanner);
+        }
         return "activityDetails";
     }
 
@@ -79,9 +87,9 @@ public class ActivityController {
 
     @GetMapping({"/activity/getUpdateForm/{activityId}"})
     public String getUpdateVenuePage(@PathVariable Long activityId, Model model) {
-        ActivityDTO activityDTO = activityService.findById(activityId)
+        Activity activity = activityService.findById(activityId)
                 .orElseThrow(() -> new EntityNotFoundException("User does not have  activities"));
-        model.addAttribute("activity", activityDTO);
+        model.addAttribute("activity", activity);
         return "activityUpdate";
     }
 

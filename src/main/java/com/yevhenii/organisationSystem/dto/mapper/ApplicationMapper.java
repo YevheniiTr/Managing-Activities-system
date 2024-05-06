@@ -3,6 +3,7 @@ package com.yevhenii.organisationSystem.dto.mapper;
 
 import com.yevhenii.organisationSystem.dto.*;
 import com.yevhenii.organisationSystem.entity.Activity;
+import com.yevhenii.organisationSystem.entity.ActivityBanner;
 import com.yevhenii.organisationSystem.entity.Profile;
 import com.yevhenii.organisationSystem.entity.Venue;
 import org.mapstruct.Mapper;
@@ -28,4 +29,9 @@ public interface ApplicationMapper {
 
     @Mapping(source = "venueId",target ="id")
     Venue venueDTOToEntity(VenueDTO venueDTO);
+
+    SaveBannerDTO bannerToDto(ActivityBanner activityBanner);
+    
+    ActivityBanner bannerDtoToEntity(SaveBannerDTO saveBannerDTO);
+
 }

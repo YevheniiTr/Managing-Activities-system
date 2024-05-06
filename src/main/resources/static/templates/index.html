@@ -9,15 +9,6 @@
     <link rel="stylesheet" type="text/css" href="/css/admin.css">
 </head>
 <style>
-    .notification-icon {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .notification-img {
-        width: 35px;
-        height: 35px;
-    }
 
     .event-card {
         background-color: #ffffff;
@@ -32,7 +23,7 @@
     }
     .event-image {
         width: 100%;
-        height: auto;
+        height: 200px;
     }
 
     .event-details {
@@ -186,9 +177,11 @@
 
             <div class="event-grid" th:each="planned: ${plannedActivities}">
                 <div class="event-card">
-                    <img src="/img/money.jpg" alt="Event Image" class="event-image">
+
+                    <a target="_blank" th:href="@{/banner/details/{banerId}(banerId = ${planned.getActivity().getActivityBanner().getId()})}"><img th:src="@{'data:image/jpeg;base64,'+${planned.getActivity().getActivityBanner().generateBase64Image()}}" class="event-image" alt="profile"></a>
                     <div class="event-details">
-                        <a target="_blank" class="event-title" th:href="@{/activity/{activityId}(activityId = ${planned.getActivity().getId()})}" th:text="${planned.getActivity().getTitle()}">Назва події</a>
+                        <p  class="event-title" th:text="${planned.getActivity().getTitle()}">Назва події</p>
+                        <br>
                         <p th:text="${planned.getActivity().getGenre()}"></p>
                         <p class="event-date" th:text="${planned.getFormattedStartDateTime()}">
                         <p class="event-location"th:text="${planned.getVenue().getStreet().getCity().getCityName()}">Місце: Київ, Палац Спорту</p>
