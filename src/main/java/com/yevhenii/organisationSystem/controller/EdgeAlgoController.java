@@ -4,6 +4,7 @@ import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
+import com.yevhenii.organisationSystem.entity.enums.EApplicationStatus;
 import com.yevhenii.organisationSystem.services.ApplicationService;
 import com.yevhenii.organisationSystem.services.EdgeService;
 import com.yevhenii.organisationSystem.services.KunAlgorithmService;
@@ -49,7 +50,7 @@ public class EdgeAlgoController {
                                      RedirectAttributes redirectAttributes,
                                      Model model) {
         LocalDate localDate = LocalDate.parse(date);
-        List<Edge> edgeList = kunAlgorithmService.getEdgesForVenues(localDate, securityUtils.getUserId());
+        List<Edge> edgeList = kunAlgorithmService.findUserEdgesForDateAndStatus(localDate, securityUtils.getUserId(), EApplicationStatus.EXPECT);
         Map<Venue, ApplicationToGetVenue> result = kunAlgorithmService.doKuhnAlgorithm(edgeList);
         List<Edge> resultList = kunAlgorithmService.getKuhnResultList(edgeList);
         //redirectAttributes.addFlashAttribute("resultAlgorithm",resultList);

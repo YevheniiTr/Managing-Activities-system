@@ -128,10 +128,7 @@ public class Graph {
     }
     public List<Venue> removeSimilarVenue(List<Venue> venues){
         List<Venue> uniqueVenues = new ArrayList<>(venues);
-
-
         Iterator<Venue> it = uniqueVenues.iterator();
-
         while (it.hasNext()) {
             Venue venue = it.next();
             for (Venue algoVenue : venueList) {

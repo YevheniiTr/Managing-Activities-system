@@ -40,23 +40,31 @@ public class KunAlgorithmImpl implements KunAlgorithmService {
     }
 
     @Override
+    public List<Edge> findUserEdgesForDateAndStatus(LocalDate date, long userId,EApplicationStatus status) {
+        return edgeRepository.findUserEdgesForDateAndStatus(date,userId,status);
+    }
+
+    @Override
     public List<Edge> getEdgesForVenues(LocalDate date, long userId) {
         return edgeRepository.getApplicationForVenuesForDay(date, userId);
     }
 
     @Override
     public List<Edge> getKuhnResultList(List<Edge> edgeList) {
-        graph = new Graph(edgeList);
-        graph.maximumBipartiteMatching();
-        graph.createResultEdgeList();
-        graph.changeResultListStatus();
-        saveMatching(graph.getResultMatchingEdgeList());
-        graph.displayAdjMatrix();
-        int[] resultMatching = graph.maximumBipartiteMatching();
-        System.out.println(Arrays.toString(resultMatching));
-        List<ApplicationToGetVenue> notMatchingApplication = graph.getApplicationsNotInResultMatching();
-        sendApplication(notMatchingApplication, graph);
-        return graph.getResultMatchingEdgeList();
+        if(edgeList.isEmpty()) return new ArrayList<Edge>();
+        else {
+            graph = new Graph(edgeList);
+            graph.maximumBipartiteMatching();
+            graph.createResultEdgeList();
+            graph.changeResultListStatus();
+            saveMatching(graph.getResultMatchingEdgeList());
+            graph.displayAdjMatrix();
+            int[] resultMatching = graph.maximumBipartiteMatching();
+            System.out.println(Arrays.toString(resultMatching));
+            List<ApplicationToGetVenue> notMatchingApplication = graph.getApplicationsNotInResultMatching();
+            sendApplication(notMatchingApplication, graph);
+            return graph.getResultMatchingEdgeList();
+        }
     }
 
 

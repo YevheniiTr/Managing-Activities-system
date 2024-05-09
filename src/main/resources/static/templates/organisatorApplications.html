@@ -35,12 +35,13 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
-        margin-right: 20px;
+        margin-left: 20px;
+
     }
 
     .venue-table th, .venue-table td {
         border: 1px solid #ccc;
-        padding: 10px;
+        padding: 5px;
         text-align: left;
     }
 
@@ -182,7 +183,7 @@
                         <th>Статус</th>
                         <th>Початок події</th>
                         <th>Завершення події</th>
-                        <th>Видалити</th>
+                        <th style="width:80px ">Видалити</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -197,9 +198,9 @@
                         <td th:text="${edge.getVenue().getTitle()}"></td>
                         <td>
                 <span th:switch="${edge.getStatus().name()}">
-                    <span th:case="'EXPECT'" style="font-size: 20px">На розгляданні</span>
-                    <span th:case="'DECLINED'" style="color: #b40012;font-size: 20px">Відхилено</span>
-                    <span th:case="'APPROVED'" style="color: darkgreen; font-size: 20px">Прийнято</span>
+                    <span th:case="'EXPECT'" style="font-size: 15px">На розгляданні</span>
+                    <span th:case="'DECLINED'" style="color: #b40012;font-size: 15px">Відхилено</span>
+                    <span th:case="'APPROVED'" style="color: darkgreen; font-size: 15px">Прийнято</span>
                 </span>
                         </td>
                         <td th:text="${edge.getApplicationToGetVenue().getStartDate()}"></td>

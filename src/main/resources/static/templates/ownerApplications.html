@@ -21,11 +21,12 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        margin-left: 20px;
     }
 
     .venue-table th, .venue-table td {
         border: 1px solid #ccc;
-        padding: 10px;
+        padding: 5px;
         text-align: left;
     }
 
@@ -153,6 +154,11 @@
                         </div>
                     </div>
                 </form>
+
+                <div th:if="${ownerEdges.isEmpty()}">
+                    <h2 style="text-align: center">Заявок немає</h2>
+                </div>
+
                 <table class="venue-table">
                     <thead>
                     <tr>

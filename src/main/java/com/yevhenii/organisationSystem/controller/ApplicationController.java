@@ -154,7 +154,7 @@ public class ApplicationController {
 
 
     @GetMapping("/applications/delete/{edgeId}")
-    public RedirectView deleteVenue(@PathVariable Long edgeId) {
+    public RedirectView deleteApplication(@PathVariable Long edgeId) {
         applicationService.delete(edgeId);
         return new RedirectView("/getOrganisatorApplication");
     }
