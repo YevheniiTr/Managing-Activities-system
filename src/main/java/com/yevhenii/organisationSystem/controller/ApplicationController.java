@@ -54,12 +54,7 @@ public class ApplicationController {
         } else {
             System.out.println("NO FILTER");
         }
-//        if (model.containsAttribute("resultAlgorithm")) {
-//            System.out.println("FILTER");
-//            List<Edge> resultList = (List<Edge>) model.getAttribute("resultAlgorithm");
-//            model.addAttribute("resultList", resultList);
-//        }
-//        else System.out.println("NO FILTER");
+
         return "getAlgoResultPage";
     }
 

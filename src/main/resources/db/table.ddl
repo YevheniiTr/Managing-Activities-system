@@ -193,7 +193,7 @@ FROM users u
          LEFT JOIN venue v on u.id = v.userID;
 SELECT *
 FROM applicationtogetvenue;
-INSERT INTO Venue (cityID, userID, title, maximumSeats,
+INSERT INTO Venue (streetid, userID, title, maximumSeats,
                    rentPrice, description, adresIndex)
 VALUES (14, 25, 'Конференц-зал "Еліт"', 100, 5000, 'Прекрасне місце для конференцій та зустрічей.', '02000'),
        (14, 25, 'Весільний ресторан "Роза"', 150, 10000, 'Ідеальне місце для весіль та великих заходів.', '43000'),
@@ -205,6 +205,26 @@ VALUES (14, 25, 'Конференц-зал "Еліт"', 100, 5000, 'Прекра
        (9, 25, 'Ресторан "Смачна тарілка"', 40, 2500, 'Смачна їжа та затишна атмосфера.', '17032'),
        (9, 25, 'Концертний зал "Гармонія"', 300, 15000, 'Для великих музичних подій та концертів.', '49068'),
        (9, 25, '"КавоЗавод"', 20, 1500, 'Ароматна кава та вишукана атмосфера.', '01014');
+
+INSERT INTO Venue (streetid, userID, title, maximumSeats,
+                   rentPrice, description, adresIndex)
+VALUES (18, 25, 'TestVenueKyiv4', 1000, 5000, 'Прекрасне місце для конференцій та зустрічей.', '02000'),
+       (18, 25, 'TestVenueKyiv5', 1500, 10000, 'Ідеальне місце для весіль та великих заходів.', '43000'),
+       (18, 25, 'TestVenueKyiv6', 500, 3000, 'Оренда офісних приміщень для бізнесу.', '61001'),
+       (16, 25, 'TestVenueKyiv7', 300, 2000, 'Затишне кафе для зустрічей та перерв.', '04050'),
+       (16, 25, 'TestVenueKyiv8', 700, 4000, 'Сучасний спортивний зал для тренувань.', '73000');
+
+INSERT INTO Venue (streetid, userID, title, maximumSeats,
+                   rentPrice, description, adresIndex)
+VALUES (16, 57, 'TestVenueLviv4', 1000, 5000, 'Прекрасне місце для конференцій та зустрічей.', '02000'),
+       (16, 57, 'TestVenueLviv5', 1500, 10000, 'Ідеальне місце для весіль та великих заходів.', '43000'),
+       (16, 57, 'TestVenueLviv6', 500, 3000, 'Оренда офісних приміщень для бізнесу.', '61001'),
+       (16, 57, 'TestVenueLviv7', 300, 2000, 'Затишне кафе для зустрічей та перерв.', '04050'),
+       (16, 57, 'TestVenueLviv8', 700, 4000, 'Сучасний спортивний зал для тренувань.', '73000');
+
+
+
+
 
 INSERT INTO Activity (title, description, amountSeats, organisation, genre, activityType, userID)
 VALUES ('Концерт "Музична гармонія"', 'Вечір прекрасної музики від талановитих виконавців.', 200, 'Музичний світ',
@@ -234,7 +254,7 @@ VALUES (2, 3, '2024-03-06 12:00');
 
 SELECT *
 FROM Edge
-WHERE startDate = '2024-03-06 12:00';
+WHERE DATE(startDate) = '2024-05-17';
 SELECT *
 FROM Activity;
 SELECT *
@@ -293,8 +313,8 @@ SELECT v.*
 FROM venue v
          LEFT JOIN PlannedActivities pa
                    ON pa.venueId = v.id
-                       AND DATE(pa.startDate) <= '01-05-2024'
-                       AND DATE(pa.endDate) >= '01-05-2024'
+                       AND DATE(pa.startDate) <= '20-05-2024'
+                       AND DATE(pa.endDate) >= '20-05-2024'
 WHERE pa.id IS NULL;
 
 
@@ -309,3 +329,12 @@ FROM venue v
 WHERE pa.id IS NULL
   AND v.maximumseats >= 1
   AND c.cityName = 'Львів';
+
+SELECT * FROM PlannedActivities LEFT JOIN  Venue v on venueId = v.id  WHERE DATE(startDate)='20-05-2024';
+
+SELECT v.*
+FROM Venue v
+         LEFT JOIN PlannedActivities pa
+                   ON pa.venueId = v.id AND date(pa.startDate) <= now()
+                          AND date(pa.endDate) >= now()
+WHERE pa.id IS NULL;

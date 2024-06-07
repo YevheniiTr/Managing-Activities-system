@@ -61,6 +61,8 @@ public class KunAlgorithmImpl implements KunAlgorithmService {
             graph.displayAdjMatrix();
             int[] resultMatching = graph.maximumBipartiteMatching();
             System.out.println(Arrays.toString(resultMatching));
+            System.out.println(graph.getVenueList());
+            System.out.println(graph.getApplicationList());
             List<ApplicationToGetVenue> notMatchingApplication = graph.getApplicationsNotInResultMatching();
             sendApplication(notMatchingApplication, graph);
             return graph.getResultMatchingEdgeList();
