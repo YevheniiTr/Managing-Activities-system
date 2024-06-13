@@ -19,4 +19,6 @@ public interface EdgeService {
     List<Edge> findOrganisatorApplicationsByUserId(long userId);
 
     Page<Edge> findPage(int pageNumber);
+
+    Page<Edge> findOrganisatorApplicationsByUserIdPaginated(long userId, int page, int size);
 }

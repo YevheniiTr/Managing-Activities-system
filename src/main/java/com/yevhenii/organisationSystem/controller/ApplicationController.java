@@ -22,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
-
 @Controller
 public class ApplicationController {
 
@@ -42,13 +41,14 @@ public class ApplicationController {
         this.cityService = cityService;
         this.edgeService = edgeService;
     }
+
     private HttpSession getSession() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         return attr.getRequest().getSession(true);
     }
 
     @GetMapping("/getAlgoResultPage")
-    public String getResultPage(Model model){
+    public String getResultPage(Model model) {
         HttpSession session = getSession();
         Object resultAlgorithm = session.getAttribute("resultAlgorithm");
         if (resultAlgorithm != null) {
@@ -83,7 +83,7 @@ public class ApplicationController {
         model.addAttribute("venueList", venueService.findAllById(securityUtils.getUserId()));
         if (model.containsAttribute("filteredOwnerList")) {
             model.addAttribute("ownerEdges", model.getAttribute("filteredOwnerList"));
-        }else {
+        } else {
             System.out.println("NO FILTER");
             model.addAttribute("ownerEdges", applicationService.findAllForOwner(securityUtils.getUserId()));
         }
@@ -105,20 +105,24 @@ public class ApplicationController {
 
     @GetMapping("/getOrganisatorApplication/{pageNumber}")
     public String getOrganisatorApplications(Model model, @PathVariable("pageNumber") int currentPage) {
-        Page<Edge> page = edgeService.findPage(currentPage);
+        Page<Edge> page = edgeService.findOrganisatorApplicationsByUserIdPaginated(securityUtils.getUserId(), currentPage, 10);
         int totalPages = page.getTotalPages();
         long totalItems = page.getTotalElements();
-        List <Edge> edges =  page.getContent();
-
+        List<Edge> edges = page.getContent();
+        model.addAttribute("activityList", activityService.findAllByUserId(securityUtils.getUserId()));
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
         model.addAttribute("orgApplications", edges);
+
+        if (model.containsAttribute("filteredOrganisatorList")) {
+            model.addAttribute("orgApplications", model.getAttribute("filteredOrganisatorList"));
+        } else {
+            model.addAttribute("orgApplications", edges);
+        }
+
         return "organisatorApplications";
     }
-
-
-
 
 
     @PostMapping("/application/create")

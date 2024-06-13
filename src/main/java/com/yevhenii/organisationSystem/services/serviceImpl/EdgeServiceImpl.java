@@ -6,6 +6,7 @@ import com.yevhenii.organisationSystem.services.EdgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,6 +46,12 @@ public class EdgeServiceImpl implements EdgeService {
     @Override
     public Page<Edge> findPage(int pageNumber) {
         return edgeRepository.findAll(PageRequest.of(pageNumber - 1, 10));
+    }
+
+    @Override
+    public Page<Edge> findOrganisatorApplicationsByUserIdPaginated(long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1,size);
+        return edgeRepository.findOrganisatorApplicationsByUserIdPaginated(userId,pageable);
     }
 
 }

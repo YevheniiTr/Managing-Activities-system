@@ -106,7 +106,7 @@ public class FilterController {
                 .collect(Collectors.toList());
         System.out.println(filteredList);
         redirectAttributes.addFlashAttribute("filteredOrganisatorList", filteredList);
-        return new RedirectView("/getOrganisatorApplication");
+        return new RedirectView("/getOrganisatorApplication/1");
     }
 
     @PostMapping("/filterPlanned")

@@ -4,6 +4,8 @@ package com.yevhenii.organisationSystem.repository;
 import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.enums.EApplicationStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -67,5 +69,8 @@ public interface EdgeRepository extends JpaRepository<Edge,Long> {
 
     @Query("select e from Edge e where e.applicationToGetVenue.activity.user.id = :userId")
     List<Edge> findOrganisatorApplicationsByUserId(long userId);
+
+    @Query("select e from Edge e where e.applicationToGetVenue.activity.user.id = :userId")
+    Page<Edge> findOrganisatorApplicationsByUserIdPaginated(long userId, Pageable pageable);
 
 }
