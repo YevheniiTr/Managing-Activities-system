@@ -2,6 +2,8 @@ package com.yevhenii.organisationSystem.repository;
 
 import com.yevhenii.organisationSystem.entity.ApplicationToGetVenue;
 import com.yevhenii.organisationSystem.entity.Edge;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,7 +27,8 @@ public interface ApplicationRepository extends JpaRepository<ApplicationToGetVen
 //    List<Edge> findAllForOwner(long userId);
     @Query("select e from Edge e  where e.venue.user.id = :userId")
     List <Edge> findAllForOwner(long userId);
-
+    @Query("select e from Edge e where e.venue.user.id = :userId")
+    Page<Edge> findAllForOwnerPaginated(long userId, Pageable pageable);
 
 
 

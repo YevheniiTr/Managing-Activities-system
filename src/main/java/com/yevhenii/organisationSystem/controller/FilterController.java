@@ -87,7 +87,7 @@ public class FilterController {
                     .collect(Collectors.toList());
         } else filteredList = listForFilter;
         redirectAttributes.addFlashAttribute("filteredOwnerList", filteredList);
-        return new RedirectView("/getOwnerApplications");
+        return new RedirectView("/getOwnerApplications/1");
     }
 
     @PostMapping("/organisatorFilter")

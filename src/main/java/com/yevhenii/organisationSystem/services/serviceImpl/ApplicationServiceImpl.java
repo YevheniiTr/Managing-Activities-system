@@ -124,5 +124,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findAllForOwner(userId);
     }
 
+    @Override
+    public Page<Edge> findAllForOwnerPaginated(long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1,size);
+        return applicationRepository.findAllForOwnerPaginated(userId,pageable);
+    }
+
 
 }

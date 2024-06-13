@@ -77,16 +77,32 @@ public class ApplicationController {
         return "sendApplicationForm";
     }
 
-    @GetMapping("/getOwnerApplications")
-    public String getOwnerApplications(Model model) {
-        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
-        model.addAttribute("venueList", venueService.findAllById(securityUtils.getUserId()));
+    //    @GetMapping("/getOwnerApplications")
+//    public String getOwnerApplications(Model model) {
+//        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
+//        model.addAttribute("venueList", venueService.findAllById(securityUtils.getUserId()));
+//        if (model.containsAttribute("filteredOwnerList")) {
+//            model.addAttribute("ownerEdges", model.getAttribute("filteredOwnerList"));
+//        } else {
+//            System.out.println("NO FILTER");
+//            model.addAttribute("ownerEdges", applicationService.findAllForOwner(securityUtils.getUserId()));
+//        }
+//        return "ownerApplications";
+//    }
+    @GetMapping("/getOwnerApplications/{currentPage}")
+    public String getOwnerApplications(Model model, @PathVariable("currentPage") int page) {
+        Page<Edge> edgePage = applicationService.findAllForOwnerPaginated(securityUtils.getUserId(), page, 10);
+        long totalApplications = edgePage.getTotalElements();
+        int totalPages = edgePage.getTotalPages();
+        List<Edge> edgeList = edgePage.getContent();
         if (model.containsAttribute("filteredOwnerList")) {
             model.addAttribute("ownerEdges", model.getAttribute("filteredOwnerList"));
         } else {
-            System.out.println("NO FILTER");
-            model.addAttribute("ownerEdges", applicationService.findAllForOwner(securityUtils.getUserId()));
+            model.addAttribute("ownerEdges", edgeList);
         }
+        model.addAttribute("totalApplications",totalApplications);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
         return "ownerApplications";
     }
 

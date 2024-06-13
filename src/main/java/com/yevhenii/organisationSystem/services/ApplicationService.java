@@ -28,5 +28,5 @@ public interface ApplicationService {
 
     List<Edge> findAllForOwner(long userId);
 
-
+    Page<Edge> findAllForOwnerPaginated(long userId, int page, int size);
 }

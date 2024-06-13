@@ -205,6 +205,41 @@
                     </tr>
                     </tbody>
                 </table>
+                <div style="text-align: center" th:if="${!ownerEdges.isEmpty()}">
+                    <br>
+                    Total Items: [[${totalApplications}]] : Page [[${currentPage}]] of [[${totalPages}]]
+                    <ul>
+                        <li class="page-item">
+                            <a class="page-link" th:if="${currentPage > 1}"
+                               th:href="@{/getOwnerApplication/1}">First</a>
+                            <span th:unless="${currentPage > 1}">First</span>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${currentPage > 1}" th:href="@{'/getOwnerApplications/' + ${currentPage - 1}}">Previous</a>
+                            <span th:unless="${currentPage > 1}">Previous</span>
+                        </li>
+
+                        <li class="page-item">
+                        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                                <a th:if="${i != currentPage}" th:href="@{'/getOwnerApplications/' + ${i}}">[[${i}]]</a>
+                                <span th:unless="${i != currentPage}">[[${i}]]</span>
+                            </span>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${currentPage < totalPages}" th:href="@{'/getOwnerApplications/' + ${currentPage + 1}}">Next</a>
+                            <span th:unless="${currentPage < totalPages}">Next</span>
+                        </li>
+
+                        <li class="page-item">
+                            <a th:if="${currentPage < totalPages}" th:href="@{'/getOwnerApplications/' + ${totalPages}}">Last</a>
+                            <span th:unless="${currentPage < totalPages}">Last</span>
+                        </li>
+                    </ul>
+                </div>
+
+
                 <form id="second-form" class="button-div" th:action="@{/manageVenues}" method="post">
                     <input type="hidden" name="date" id="secondFormHiddenDate"/>
                     <button class="standart-button">Розподілити майданчики</button>
