@@ -333,3 +333,7 @@ input[type=checkbox] {
 .error-text{
 	color: red;
 }
+.page-item{
+	display: inline-block;
+	margin: 5px 5px;
+}

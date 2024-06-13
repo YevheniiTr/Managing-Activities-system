@@ -4,9 +4,11 @@ import com.yevhenii.organisationSystem.controller.util.SecurityUtils;
 import com.yevhenii.organisationSystem.dto.ActivityDTO;
 import com.yevhenii.organisationSystem.dto.SaveApplicationDTO;
 import com.yevhenii.organisationSystem.entity.City;
+import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
 import com.yevhenii.organisationSystem.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,18 +90,36 @@ public class ApplicationController {
         return "ownerApplications";
     }
 
-    @GetMapping("/getOrganisatorApplication")
-    public String getOrganisatorApplications(Model model) {
-        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
-        model.addAttribute("activityList", activityService.findAllByUserId(securityUtils.getUserId()));
-        model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
-        if (model.containsAttribute("filteredOrganisatorList")) {
-            model.addAttribute("orgApplications", model.getAttribute("filteredOrganisatorList"));
-        } else {
-            model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
-        }
+//    @GetMapping("/getOrganisatorApplication")
+//    public String getOrganisatorApplications(Model model) {
+//        //Page<Edge> edgesPage = applicationService.findPaginated(securityUtils.getUserId(), PageRequest.of(page - 1, size));
+//        model.addAttribute("activityList", activityService.findAllByUserId(securityUtils.getUserId()));
+//        model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+//        if (model.containsAttribute("filteredOrganisatorList")) {
+//            model.addAttribute("orgApplications", model.getAttribute("filteredOrganisatorList"));
+//        } else {
+//            model.addAttribute("orgApplications", edgeService.findOrganisatorApplicationsByUserId(securityUtils.getUserId()));
+//        }
+//        return "organisatorApplications";
+//    }
+
+    @GetMapping("/getOrganisatorApplication/{pageNumber}")
+    public String getOrganisatorApplications(Model model, @PathVariable("pageNumber") int currentPage) {
+        Page<Edge> page = edgeService.findPage(currentPage);
+        int totalPages = page.getTotalPages();
+        long totalItems = page.getTotalElements();
+        List <Edge> edges =  page.getContent();
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("orgApplications", edges);
         return "organisatorApplications";
     }
+
+
+
+
 
     @PostMapping("/application/create")
     public RedirectView createApplication(@RequestBody SaveApplicationDTO saveApplication) {

@@ -4,6 +4,8 @@ import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.repository.EdgeRepository;
 import com.yevhenii.organisationSystem.services.EdgeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,4 +41,10 @@ public class EdgeServiceImpl implements EdgeService {
     public List<Edge> findOrganisatorApplicationsByUserId(long userId){
         return edgeRepository.findOrganisatorApplicationsByUserId(userId);
     }
+
+    @Override
+    public Page<Edge> findPage(int pageNumber) {
+        return edgeRepository.findAll(PageRequest.of(pageNumber - 1, 10));
+    }
+
 }

@@ -2,6 +2,7 @@ package com.yevhenii.organisationSystem.services;
 
 import com.yevhenii.organisationSystem.entity.Edge;
 import com.yevhenii.organisationSystem.entity.Venue;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
@@ -16,4 +17,6 @@ public interface EdgeService {
     List<Edge> findEdgesByOrganisatorAndDate(LocalDate startDate, Long userId);
 
     List<Edge> findOrganisatorApplicationsByUserId(long userId);
+
+    Page<Edge> findPage(int pageNumber);
 }

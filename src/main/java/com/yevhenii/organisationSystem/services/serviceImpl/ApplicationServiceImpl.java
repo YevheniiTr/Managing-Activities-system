@@ -124,22 +124,5 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findAllForOwner(userId);
     }
 
-    @Override
-    public Page<Edge> findPaginated(Pageable pageable,List<Edge> edgeList) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Edge> list;
 
-        if (edgeList.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, edgeList.size());
-            list = edgeList.subList(startItem, toIndex);
-        }
-
-        Page<Edge> edgePage
-                = new PageImpl<Edge>(list, PageRequest.of(currentPage, pageSize), edgeList.size());
-        return edgePage;
-    }
 }
